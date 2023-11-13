@@ -1,9 +1,7 @@
 /* NAVBAR START */
 nav {
-
     color: white;
     background-color: #a7bed3;
-
     background-size: cover;
     opacity: 0.9;
     display: flex;
@@ -14,7 +12,7 @@ nav {
 
 nav img {
     width: 70px;
-    border-radius: 60%;
+    border-radius: 100%;
 }
 
 nav ul li {
@@ -23,26 +21,24 @@ nav ul li {
 
 nav ul li a {
     color: white;
-    font-size: large;
+    font-size: medium;
     text-decoration: none;
     padding: 10px 16px;
 }
 
 nav ul li a:hover {
-    background-color: rgb(237, 224, 203);
+    background: linear-gradient(45deg, #a7bed3c2, #fcf5c7b9);
+
 }
 
-/* head {
-    background-color: rgba(237, 224, 203, 0.71);
-
-} */
 
 body.HomePage {
-    /* background-image: url(../Images/wallpaper.jpg); */
-    height: 100%;
-    width: 100%;
+
+    background: linear-gradient(45deg, #a7bed3c2, #fcf5c7b9);
     margin: 0;
     padding: 0;
+    height: 100%;
+    width: 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -51,14 +47,15 @@ body.HomePage {
 
 /* FOOTER START */
 footer {
-    background-color: rgb(109, 104, 98)590;
+    background-color: rgb(128, 70, 0)590;
     color: rgb(36, 29, 29);
     text-decoration: none;
     text-align: center;
     position: relative;
     bottom: 0;
-    /* in the end position 0*/
-    padding: 20px;
+    padding-top: 20px;
+    padding-bottom: 5%;
+    margin: 0%;
     width: 100%;
 }
 
@@ -66,31 +63,82 @@ footer {
 
 div.homePageDiv0 {
     background-image: url(../images/reading.jpg);
+    margin: 0%;
     width: 100%;
     height: 400px;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    opacity: 0.7;
-
+    opacity: 0.9;
+    
 }
 
-div.homePageDiv1 {
-    color: rgb(60, 20, 20);
-    text-align: left;
+    .title-word {
+        animation: color-animation 4s linear infinite;
+      }
+      
+      .title-word-1 {
+        --color-1: #DF8453;
+        --color-2: #3D8DAE;
+        --color-3: #E4A9A8;
+      }
+      
+      .title-word-2 {
+        --color-1: #DBAD4A;
+        --color-2: #ACCFCB;
+        --color-3: #17494D;
+      }
+      
+      .title-word-3 {
+        --color-1: #ACCFCB;
+        --color-2: #E4A9A8;
+        --color-3: #ACCFCB;
+      }
+      
+      .title-word-4 {
+        --color-1: #3D8DAE;
+        --color-2: #DF8453;
+        --color-3: #E4A9A8;
+      }
+      
+      @keyframes color-animation {
+        0%    {color: var(--color-1)}
+        32%   {color: var(--color-1)}
+        33%   {color: var(--color-2)}
+        65%   {color: var(--color-2)}
+        66%   {color: var(--color-3)}
+        99%   {color: var(--color-3)}
+        100%  {color: var(--color-1)}
+      }
+      
+      /* Here are just some visual styles. 🖌 */
+      
+      .wordcontainer {
+        display: grid;
+        place-items: center;  
+        text-align: center;
+        height: 70vh
+      }
+      
+      .title {
+        font-family: "Montserrat", sans-serif;
+        font-weight: 600;
+        font-size: 7.5vw;
+        text-transform: uppercase;
+      }
+
+
+div.homePageDiv1 h3{
+    color: #346a9c;
+    font-size: x-large;
+    text-align: center;
+    padding-top: 50px;
+    padding-bottom: 50px;
     height: 40%;
     width: 100%;
-    padding: 50px;
-    background: linear-gradient(45deg, #a7bed3, #fcf5c7);
-    opacity: 0.8;
+    margin-top: 10px;
+    margin-bottom: auto;
 }
-
-/* div.homePageDiv2 {S
-    height: 70px;
-    width: 100%;
-    padding: 50px;
-    background: linear-gradient(45deg, #a7bed3, #fcf5c7);
-} */
 
 div.HomePage1 ul {
     position: absolute;
@@ -111,122 +159,35 @@ div.homePageDiv1 ul li {
 
 div.homePageDiv1 ul li a {
     color: rgb(71, 62, 50);
-    font-size: medium;
+    font-size: large;
     text-decoration: none;
     padding: 10px;
 }
 
 div.homePageDiv1 ul li a:hover {
-    color: #a7bed3;
-    font-size: medium;
+    background: linear-gradient(45deg, #ffe2c8d4, #ffc7d7c7);
+    color: #346a9c;
+    transition: .2s ease;
+    font-size: large;
     text-decoration: none;
     padding: 10px;
 }
 
-LIBRARY PAGE body.libraryW {
-    background-image: url(../Images/LIBRARY.jpg);
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
-/* background-color: rgba(237, 224, 203, 0.715); */
-/* color: antiquewhite;
-}
-
-/* MY PROFILE PAGE */
-body.MyProfile {
-    background-image: url(../Images/profileW.jpg);
-    height: 100%;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    color: antiquewhite;
-}
-
-div.Profile ul li {
-    display: block;
-
-}
-
-div.Profile ul li img {
-
-    width: 70px;
-
-}
-
-div.Profile ul li h3 {
-
-    color: antiquewhite;
-
-}
-
-div.ProfileAssets {
-    display: inline-block;
-    text-align: center;
-    padding: 100px;
-}
-
-div.ProfileAssets img {
-    opacity: 0.7;
-}
-
-a:link {
-    color: #292019;
-    font-size: small;
-    text-decoration: none;
-
-}
-
-a:visited {
-    text-decoration: none;
-    color: #292019;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-*/
-
-/* MY BOOKS PAGE */
-div.booksprofile {
-    text-align: center;
-    padding: 20px;
-}
-
-div.MyBooks {
-    display: inline-block;
-    text-align: center;
-    padding: 100px;
-}
-
-/* TBR PAGE */
-div.tbr {
-    text-align: center;
-    padding: 20px;
-}
-
-div.TBR {
-    display: inline-block;
-    text-align: center;
-    padding: 100px;
-}
-
 /* LOGIN PAGE */
 body.loginpage {
-    background: linear-gradient(45deg, #a7bed3, #fcf5c7);
+    background-image: url(../images/profileW.jpg);
+
     font-family: 'Arial', sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100vh;
     margin: 0;
+    z-index: 1;
 }
 
 .login-container {
-    background-color: #f8f8f8;
+    background: linear-gradient(45deg, #ffe2c8d4, #ffc7d7c7);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -276,4 +237,10 @@ button {
 
 button:hover {
     background-color: #fcf5c7;
+}
+
+form#loginForm span {
+    color: red;
+    font-size: 15px;
+    margin-bottom: 20px;
 }
