@@ -36,13 +36,13 @@ nav ul li a:hover {
 }
 body.HomePage {
 
-    background: linear-gradient(45deg, #a7bed3c2, #fcf5c7b9);
+    background: linear-gradient(90deg, #a7bed3c2, #fcf5c7b9);
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
     background-position: center;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     background-size: cover;
 }
 
