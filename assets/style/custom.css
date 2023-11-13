@@ -175,6 +175,109 @@ div.homePageDiv1 ul li a:hover {
     padding: 10px;
 }
 
+
+/* MY PROFILE PAGE START*/
+body.profile {
+    background-image: url(../images/profileW.jpg);
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    color: antiquewhite;
+}
+
+html,
+body {
+    margin: 0px;
+    height: 100%;
+}
+
+div.profileDiv {
+    display: grid;
+    height: 100%;
+}
+
+div.top-text {
+    text-align: center;
+    height: 40%;
+    color: #555;
+}
+
+div.readAndTo {
+    display: flex;
+    position: relative;
+    top: -200px;
+    left: -20px;
+    height: 100%;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+div.read {    
+    display: flex;
+    justify-content: space-evenly; 
+    border-radius: 25px;
+    width: 40%;
+    height: 100%;
+    background-color: #d79ece;
+    opacity: 0.77;
+    z-index: 1;
+}
+
+div.read-text {
+    position: relative;
+    top: 120px;
+    left: 60px;
+    padding-left: 20px;
+    color: #555;
+}
+
+div.read-img {
+    /* float:right;
+    width: 70%;
+    left: 150px;
+    top: 100px; */
+    margin-left: 20%;
+    padding-top: 20%;
+    max-width: 100%;
+    max-height:100%;
+}
+
+div.read-img img {
+    /* align-items: left; */
+    /* right: 10px; */
+    height: 200px;
+    width: 200px;
+}
+
+div.to-be-read {
+    border-radius: 25px;
+    width: 40%;
+    height: 100%;
+    background-color: #67468a;
+    opacity: 0.77;
+    z-index: 1;
+}
+
+div.to-be-read h1 {
+    position: relative;
+    top: 120px;
+    left: 80px;
+    color: #ceb8b8;
+}
+
+#read-div:hover {
+    transform: scale(1.035);
+    opacity: 0.6;
+}
+#to-be-read-div:hover {
+    transform: scale(1.035);
+    opacity: 0.6;
+}
+/* MY PROFILE PAGE END*/
+
+
 /* LOGIN PAGE */
 body.loginpage {
     background-image: url(../images/profileW.jpg);
