@@ -77,9 +77,10 @@ document.addEventListener('DOMContentLoaded',(event)=>{
 function search(){
 
     const test = document.getElementById("inputId").value;
-    console.log(test);
-    const book = books.find(n=> n.title==test);
-    console.log(book);
+    const book1=test.toLowerCase();
+    // console.log(test);
+    const book = books.find(n=> n.title.toLowerCase()==book1);
+    // console.log(book);
 
     if(book){
         alert("YAY!! \n The book ' "+book.title+" ' you are searching is in our library.");

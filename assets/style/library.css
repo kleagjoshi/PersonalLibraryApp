@@ -1,11 +1,21 @@
 
 /* START Library Page */
 
-  
+/* Background */
+
+body.library {
+  background: linear-gradient(90deg, #67468a,#e4a9a8);
+  margin: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat:repeat;
+} 
+
   /* Start Add button and Search Bar */
-body.Library{
-  margin: 0%;
+body.library{
+  margin: 0%; 
 }
+
 .belowNav ul li {
     display:inline-block;
     justify-content: space-between;
@@ -16,7 +26,8 @@ ul li .searchForm{
 } 
   #addBtn {
     margin-top: 3%;
-    margin-left: 350%;
+    /* margin-left: auto; */
+    margin-left: 300%; 
   }
 
  #searchBtn {
@@ -98,9 +109,8 @@ ul li .searchForm{
      /* margin-top: 50px;  */
     margin: 50px;
     display: grid;
-    grid-template-columns: 350px 350px 350px;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     grid-gap: 100px;
-    background-color: #fff;
     color: #B0C4D7;
   }
   

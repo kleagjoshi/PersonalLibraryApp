@@ -34,8 +34,6 @@ nav ul li a:hover {
     background: linear-gradient(45deg, #a7bed3c2, #fcf5c7b9);
 
 }
-
-
 body.HomePage {
 
     background: linear-gradient(45deg, #a7bed3c2, #fcf5c7b9);
@@ -46,7 +44,6 @@ body.HomePage {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
-    color: antiquewhite;
 }
 
 /* FOOTER START */
