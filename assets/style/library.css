@@ -3,7 +3,9 @@
 
   
   /* Start Add button and Search Bar */
-
+body.Library{
+  margin: 0%;
+}
 .belowNav ul li {
     display:inline-block;
     justify-content: space-between;
@@ -93,6 +95,7 @@ ul li .searchForm{
 
 /* Start grid display */
   div.grid-container {
+     /* margin-top: 50px;  */
     margin: 50px;
     display: grid;
     grid-template-columns: 350px 350px 350px;
