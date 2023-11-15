@@ -1,46 +1,20 @@
 class Book{
-    constructor(_id, _title, _author){
+    constructor(_id, _title, _author,_description, _imageurl,_toBeRead, _readBook){
 
-        if(arguments.length != 3)
+        if(arguments.length != 5)
         {
-            throw new Error("Please, provide 3 properties")
+            throw new Error("Please, provide 5 properties")
         }
 
         this.id = _id;
         this.title = _title;
         this.author = _author;
+        this.description=_description;
+        this.imageurl=_imageurl;
+        this.toBeRead=_toBeRead;
+        this.readBook=_readBook;
         
     }
-}
-
-const books = [
-    new Book(0,'Babel','R.F KUANG'),
-    new Book(1, 'The God Of Endings','JACQUELINE HOLLAND'),
-    new Book(2, 'If We Were Villains','M.L.RIO'),
-    new Book(3, 'The secret history','DONNA TARTT'),
-    new Book(4,'The Hollow Places','T. KINGFISHER'),
-];
-
-
-
-for(let i=0;i<books.length;i++)
-{
-    document.getElementById("book"+i).innerHTML="<br>"+books[i].title +"<br><br>"+ books[i].author+"<br>";
-    
-    //<button id="readBtn" data-book-id="${book.id}">Read Me</button>
-    // var Button = document.createElement('button');
-    // Button.id = 'Btn'+i;
-    // Button.innerHTML = 'Read Me';
-    // document.getElementById("book"+i).appendChild(Button);
-
-}
-
-function readFunction(event){
-    $("#readModal").show();
-
-$("#closeReadSpn").click(function(){
-    $("#readModal").hide();
-});
 }
 
 function readFunction1(event){
@@ -52,18 +26,6 @@ $("#closeAddModalSpn").click(function(){
 
 }
 
-// Add event to Read Me button
-document.addEventListener('DOMContentLoaded',(event)=>{
-
-    const readMeBtn = document.getElementsByName("readBtn");
-
-    for (let i = 0; i < readMeBtn.length; i++) {
-        readMeBtn[i].addEventListener("click", readFunction);
-    }
-
-    
-})
-
 //Add event to Add Book button
 document.addEventListener('DOMContentLoaded',(event)=>{
 
@@ -72,31 +34,122 @@ document.addEventListener('DOMContentLoaded',(event)=>{
     
 })
 
+
+
+//populate grid
+
+const books = JSON.parse(localStorage.getItem('books')) || [];
+
+document.getElementById("myGrid").innerHTML=" ";
+
+function populateGrid(){
+    $.each(books, function(index, book){
+        const item = `<div class="grid-item">
+                    <div class="img-container">
+                        <img class="image" src="${book.imageurl}">
+                        <div class="middle">
+                            <div class="text">${book.description}</div>
+                        </div>
+                    </div>
+                    <div class="attr" id="">${book.title} <br> ${book.author}</div>
+                    <div>
+                         <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn" data-read-id="${book.id}">Read Me</button>   
+                    </div>
+                </div>`;
+        
+                document.getElementById("myGrid").innerHTML += item;
+        
+    });
+}
+
+populateGrid();
+
+
+//this function makes the form function as it should
+
+function handleSubmit(_title, _author, _description, _image){
+    // Create Object
+    var newBook = {
+        id: Math.floor(Math.random() * 1000000), // Random number between 0 and 1000000
+        title:_title,
+        author:_author,
+        description:_description,
+        imageurl:_image,
+        toBeRead:false,
+        readBook:false
+
+    }
+
+    // Retrieve existing books from localStorage, or initialize an empty array if none exist
+    var existingBooks = JSON.parse(localStorage.getItem('books')) || [];
+
+    // Add the new book to the array
+    existingBooks.push(newBook);
+
+    // Update localStorage with the new array
+    localStorage.setItem('books', JSON.stringify(existingBooks));
+
+    // console.log('New book added:', newBook);
+    // console.log('Updated books:', existingBooks);
+}
+
+$(document).ready(function(){
+    $("#submitBtn").click(function() {
+        // Get values from form fields
+        var title = $("#bookTitle").val();
+        var author = $("#author").val();
+        var description = $("#description").val();
+        var imageurl = $("#image").val();
+
+        // Call the handleSubmit function with the form values
+        handleSubmit(title, author, description, imageurl);
+    });
+})
+
+
+//add functionality to read me button
+const gridBody = document.getElementById("myGrid");
+
+$(gridBody).on('click', "#readBtn", function(){
+    const bookId = $(this).data('read-id');
+    const book = books.find(n => n.id == bookId);
+    
+
+    console.log($`Selected order = ${book}`);
+
+    book.toBeRead=true;
+
+     // Update the orders in localStorage
+    localStorage.setItem('books', JSON.stringify(books));
+
+    $("#book-name").text(book.title);
+
+    $("#readModal").show();
+})
+
+
+$("#closeReadSpn").click(function(){
+    $("#readModal").hide();
+});
+
+
 // Search function
 
 function search(){
 
     const test = document.getElementById("inputId").value;
     const book1=test.toLowerCase();
-    // console.log(test);
-    const book = books.find(n=> n.title.toLowerCase()==book1);
-    // console.log(book);
 
+    var allBooks = JSON.parse(localStorage.getItem('books')) || [];
+    
+    
+    const book = allBooks.find(n=> n.title.toLowerCase()==book1);
     if(book){
         alert("YAY!! \n The book ' "+book.title+" ' you are searching is in our library.");
-        document.getElementsByClassName("grid-container").innerHTML="";
-        const newDiv=document.createElement("div");
-        newDiv.id="book"+book.id;
-        newDiv.innerHTML="<br>"+book.title+"<br><br>"+book.author;
-        document.getElementsByClassName("grid-container").appendChild(newDiv);
-       
-        // document.getElementById("book"+book.id).innerHTML="<br>"+books[book.id].title +"<br><br>"+ books[book.id].author+"<br>";
     }
     else{
         alert("Error 404!!!\nHahaha Just kidding :) \nWe don't have this book.");
     }
-    
-
 }
 
 document.addEventListener('DOMContentLoaded',(event)=>{
@@ -107,4 +160,17 @@ document.addEventListener('DOMContentLoaded',(event)=>{
     
 })
 
+//Image preview in the form
 
+function previewImage(input) {
+    const preview = document.getElementById('imagePreview');
+    const url = input.value.trim();
+
+    if (url) {
+        preview.src = url;
+        preview.style.display = 'block';
+    } else {
+        preview.src = '';
+        preview.style.display = 'none';
+    }
+}

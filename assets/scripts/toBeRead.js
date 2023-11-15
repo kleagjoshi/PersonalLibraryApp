@@ -1,52 +1,57 @@
-class Book{
-    constructor(_id, _title, _author){
+//populate grid on to be read page
+const books = JSON.parse(localStorage.getItem('books')) || [];
 
-        if(arguments.length != 3)
-        {
-            throw new Error("Please, provide 3 properties")
-        }
+document.getElementById("myGrid").innerHTML=" ";
 
-        this.id = _id;
-        this.title = _title;
-        this.author = _author;
+const filteredBooks = books.filter(book => book.toBeRead == true);
+
+function populateGrid(){
+    $.each(filteredBooks, function(index, book){
+        const item = `<div class="grid-item">
+                    <div class="img-container">
+                        <img class="image" src="${book.imageurl}">
+                        <div class="middle">
+                            <div class="text">${book.description}</div>
+                        </div>
+                    </div>
+                    <div class="attr" id="">${book.title} <br> ${book.author}</div>
+                    <div>
+                         <button class ="glow-on-hover" type="button" name="startReadBtn" id="startReadBtn" data-read-id="${book.id}">Start Reading</button>   
+                    </div>
+                </div>`;
         
-    }
+                document.getElementById("myGrid").innerHTML += item;
+        
+    });
 }
 
-const books = [
-    new Book(0, 'The secret history','DONNA TARTT'),
-    new Book(1,'The Hollow Places','T. KINGFISHER'),
-];
+populateGrid();
 
+//make the button start reading functional
 
+const gridBody = document.getElementById("myGrid");
 
-for(let i=0;i<books.length;i++)
-{
-    document.getElementById("book"+i).innerHTML="<br>"+books[i].title +"<br><br>"+ books[i].author+"<br>";
+$(gridBody).on('click', "#startReadBtn", function(){
+    const bookId = $(this).data('read-id');
+    const book = books.find(n => n.id == bookId);
+   
+    book.readBook=true; //add to already read
+    book.toBeRead=false; //remove from wishing list
 
-}
+     // Update the books in localStorage
+    localStorage.setItem('books', JSON.stringify(books));
 
-function readFunction(event){
+    $("#book-name").text(book.title);
+
     $("#readModal").show();
+
+    location.reload();
+})
+
 
 $("#closeReadSpn").click(function(){
     $("#readModal").hide();
 });
-}
-
-
-
-// Add event to Start Reading button
-document.addEventListener('DOMContentLoaded',(event)=>{
-
-    const readMeBtn = document.getElementsByName("startReadBtn");
-
-    for (let i = 0; i < readMeBtn.length; i++) {
-        readMeBtn[i].addEventListener("click", readFunction);
-    }
-
-    
-})
 
 
 // Search function
@@ -55,25 +60,14 @@ function search(){
 
     const test = document.getElementById("inputId").value;
     const book1=test.toLowerCase();
-    // console.log(test);
-    const book = books.find(n=> n.title.toLowerCase()==book1);
-    // console.log(book);
-
+    
+    const book = filteredBooks.find(n=> n.title.toLowerCase()==book1);
     if(book){
-        alert("YAY!! \n The book ' "+book.title+" ' you are searching is in our library.");
-        document.getElementsByClassName("grid-container").innerHTML="";
-        const newDiv=document.createElement("div");
-        newDiv.id="book"+book.id;
-        newDiv.innerHTML="<br>"+book.title+"<br><br>"+book.author;
-        document.getElementsByClassName("grid-container").appendChild(newDiv);
-       
-        // document.getElementById("book"+book.id).innerHTML="<br>"+books[book.id].title +"<br><br>"+ books[book.id].author+"<br>";
+        alert("YAY!! \n You have' "+book.title+" ' in your wishing list.");
     }
     else{
-        alert("Error 404!!!\nHahaha Just kidding :) \nWe don't have this book.");
+        alert("Error 404!!!\nHahaha Just kidding :) \nYou don't have this book in your wishing list.");
     }
-    
-
 }
 
 document.addEventListener('DOMContentLoaded',(event)=>{
@@ -83,5 +77,3 @@ document.addEventListener('DOMContentLoaded',(event)=>{
 
     
 })
-
-

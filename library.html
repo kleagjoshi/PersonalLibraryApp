@@ -38,72 +38,6 @@
     
 
    <div class="grid-container" id="myGrid">
-        <div class="grid-item">
-            <div class="img-container">
-                <img class="image" src="./assets/images/Babel.png">
-                <div class="middle">
-                    <div class="text">From award-winning author R. F. Kuang comes Babel, a historical fantasy epic that grapples with student revolutions, colonial resistance, and the use of language and translation as the dominating tool of the British Empire
-                    </div>
-                </div>
-            </div>
-            <div class="attr" id="book0">  
-            </div>
-            <div>
-                 <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn">Read Me</button> 
-                
-            </div>
-        </div>
-        <div class="grid-item">
-            <div class="img-container">
-                <img class="image" src="./assets/images/GOE.jpg">
-                <div class="middle">
-                    <div class="text">By turns suspenseful and enchanting, this breathtaking first novel weaves a story of love, family, history, and myth as seen through the eyes of one immortal woman.
-                        Her youthful beauty masks the dark truth of her life: she has endured centuries of turmoil and heartache in the wake of her grandfather’s long-ago decision to make her immortal like himself.
-                    </div>
-                </div>
-            </div>
-            <div class="attr" id="book1"></div>
-            <div>
-                <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn">Read Me</button> 
-            </div>
-        </div>
-        <div class="grid-item">
-            <div class="img-container">
-                <img class="image" src="./assets/images/IWWV.png">
-                <div class="middle">
-                    <div class="text">Oliver Marks has just served ten years in jail - for a murder he may or may not have committed. On the day he's released, he's greeted by the man who put him in prison. Detective Colborne is retiring, but before he does, he wants to know what really happened a decade ago.
-                   </div>
-            </div>
-            </div>
-            <div class="attr" id="book2">  </div>
-            <div>
-                <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn">Read Me</button> 
-            </div>
-        </div>
-        <div class="grid-item">
-            <div class="img-container">
-                <img class="image" src="./assets/images/S H.png">
-                <div class="middle_b">
-                    <div class="text">Under the influence of their charismatic classics professor, a group of clever, eccentric misfits at an elite New England college discover a way of thinking and living that is a world away from the humdrum existence of their contemporaries. </div>
-                </div>
-            </div>
-            <div class="attr" id="book3"></div>
-            <div>
-                <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn">Read Me</button> 
-            </div>
-        </div> 
-        <div class="grid-item">
-            <div class="img-container">
-                <img class="image" src="./assets/images/THP.jpeg">
-                <div class="middle_b">
-                    <div class="text">Kara finds these words in the mysterious bunker that she’s discovered behind a hole in the wall of her uncle’s house. </div>
-                </div>
-            </div>
-            <div class="attr" id="book4"></div>
-            <div>
-                <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn">Read Me</button> 
-            </div>
-        </div>  
    </div>
 
 
@@ -116,7 +50,8 @@
                 <h2>Exellent Choice!</h2>
                 <span id="closeReadSpn" class="close">&times;</span>
             </div>
-            <p>We hope you will like this book </p>  
+            <p>We hope you will like <h3 id="book-name"></h3> </p>
+              
         </div>
     </div>
 
@@ -142,11 +77,16 @@
                     <label for="author">Book Author</label>
                     <input type="author" id="author" name="author" placeholder="Enter the book's author">
                 </div>
+
+                <div>
+                    <label for="description">Book Description</label>
+                    <input type="description" id="description" name="description" placeholder="Enter the book's description">
+                </div>
         
                 <div>
                     <label for="image">Image</label>
-                    <input type="link" id="image" name="image" placeholder="Enter the image url "></textarea>
-                   
+                    <input type="link" id="image" name="image" placeholder="Enter the image url" oninput="previewImage(this)"></textarea>
+                    <img id="imagePreview" src="" alt="Image Preview" style="max-width: 100%; max-height: 100px; margin-top: 10px; display: none;">
                 </div>
                 <div>
                     <button id="submitBtn">Add</button>
