@@ -14,11 +14,12 @@
     min-inline-size: 100px;
     min-block-size: 100px;
     display: grid;
-    place-items: right;
+    place-items: center;
     position: relative;
     font-weight: 700;
     font-size: max(3vmin, 1.4rem);
-    
+    margin-left: 70%;
+
     &::before {
       content: '';
       position: absolute;
@@ -43,7 +44,9 @@
     }
   }
 
-
+.sliding{
+  margin-left: 60%;
+}
   
 /* START Library Page */
 
@@ -175,7 +178,7 @@ ul li .searchForm{
 .image {
     width: 60%;
     height: 50%;
-    margin-left: 15%;
+    margin-left: 20%;
     margin-top: 2%;
     border-radius: 4px;
 }

@@ -23,7 +23,7 @@ function populateGrid() {
                         aria-valuemin="0"
                         aria-valuemax="100"
                       ></div>
-                        <input type="range" value="0" min="0" max="100" />
+                        <input class=sliding type="range" value="0" min="0" max="100" />
                 </div>
                 </div>`;
 
