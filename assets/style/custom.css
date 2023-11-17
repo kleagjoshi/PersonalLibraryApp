@@ -126,18 +126,6 @@ div.homePageDiv0 {
         text-transform: uppercase;
       }
 
-
-/* div.homePageDiv1 h3{
-    color: #346a9c;
-    font-size: x-large;
-    text-align: center;
-    padding-top: 50px;
-    padding-bottom: 50px;
-    height: 40%;
-    width: 100%;
-    margin-top: 10px;
-    margin-bottom: auto;
-} */
 div.quote-container p{
     color: #346a9c;
     font-size: x-large;
@@ -195,7 +183,7 @@ div.homePageDiv1 ul li a:hover {
     margin-top: 10px;
     margin-bottom: auto;
   }  
-
+/* HOMPEPAGE END */
 
 /* MY PROFILE PAGE START*/
 body.profile {
@@ -371,6 +359,7 @@ form#loginForm span {
     font-size: 15px;
     margin-bottom: 20px;
 }
+/* LOGIN PAGE END */
 
 /* progress bar  style*/
 
