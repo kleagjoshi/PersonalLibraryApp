@@ -1,11 +1,6 @@
 class Book{
     constructor(_id, _title, _author,_description, _imageurl,_toBeRead, _readBook){
 
-        if(arguments.length != 5)
-        {
-            throw new Error("Please, provide 5 properties")
-        }
-
         this.id = _id;
         this.title = _title;
         this.author = _author;
@@ -35,10 +30,17 @@ document.addEventListener('DOMContentLoaded',(event)=>{
 })
 
 
-
-//populate grid
-
 const books = JSON.parse(localStorage.getItem('books')) || [];
+
+//adding 2 default books 
+if(books.length==0)
+{
+    handleSubmit('BABEL', 'R. F. Kuang', 'From award-winning author R. F. Kuang comes Babel, a historical fantasy epic that grapples with student revolutions, colonial resistance, and the use of language and translation as the dominating tool of the British Empire.', 'https://i.harperapps.com/hcanz/covers/9780008501822/x480.jpg');
+    handleSubmit('If We Were Villains', 'M.L. Rio', 'Oliver Marks has just served ten years in jail - for a murder he may or may not have committed. On the day he is released, he is greeted by the man who put him in prison. Detective Colborne is retiring, but before he does, he wants to know what really happened a decade ago.', 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1480717682i/30319086.jpg'); 
+
+    populateGrid();
+    location.reload();
+}
 
 document.getElementById("myGrid").innerHTML=" ";
 
@@ -89,8 +91,6 @@ function handleSubmit(_title, _author, _description, _image){
     // Update localStorage with the new array
     localStorage.setItem('books', JSON.stringify(existingBooks));
 
-    // console.log('New book added:', newBook);
-    // console.log('Updated books:', existingBooks);
 }
 
 $(document).ready(function(){

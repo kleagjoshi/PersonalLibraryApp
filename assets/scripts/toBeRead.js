@@ -44,13 +44,12 @@ $(gridBody).on('click', "#startReadBtn", function(){
     $("#book-name").text(book.title);
 
     $("#readModal").show();
-
-    location.reload();
 })
 
 
 $("#closeReadSpn").click(function(){
     $("#readModal").hide();
+    location.reload();
 });
 
 
