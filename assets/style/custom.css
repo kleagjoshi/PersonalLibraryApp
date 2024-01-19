@@ -34,6 +34,7 @@ nav ul li a:hover {
     background: linear-gradient(45deg, #a7bed3c2, #fcf5c7b9);
 
 }
+
 body.HomePage {
 
     background: linear-gradient(90deg, #a7bed3c2, #fcf5c7b9);
@@ -69,64 +70,85 @@ div.homePageDiv0 {
     background-repeat: no-repeat;
     background-size: cover;
     opacity: 0.9;
-    
-}
-/* EXPRESSION STYLING */
-    .title-word {
-        animation: color-animation 4s linear infinite;
-      }
-      
-      .title-word-1 {
-        --color-1: #DF8453;
-        --color-2: #3D8DAE;
-        --color-3: #E4A9A8;
-      }
-      
-      .title-word-2 {
-        --color-1: #DBAD4A;
-        --color-2: #ACCFCB;
-        --color-3: #17494D;
-      }
-      
-      .title-word-3 {
-        --color-1: #ACCFCB;
-        --color-2: #E4A9A8;
-        --color-3: #ACCFCB;
-      }
-      
-      .title-word-4 {
-        --color-1: #3D8DAE;
-        --color-2: #DF8453;
-        --color-3: #E4A9A8;
-      }
-      
-      @keyframes color-animation {
-        0%    {color: var(--color-1)}
-        32%   {color: var(--color-1)}
-        33%   {color: var(--color-2)}
-        65%   {color: var(--color-2)}
-        66%   {color: var(--color-3)}
-        99%   {color: var(--color-3)}
-        100%  {color: var(--color-1)}
-      }
-      
-      /*some visual styles.*/
-      
-      .wordcontainer {
-        display: grid;
-        place-items: center;  
-        text-align: center;
-        height: 70vh
-      }
-      
-      .title {
-        font-family: "Montserrat", sans-serif;
-        font-weight: 600;
-        font-size: 7.5vw;
-        text-transform: uppercase;
-      }
 
-div.quote-container p{
+}
+
+/* EXPRESSION STYLING */
+.title-word {
+    animation: color-animation 4s linear infinite;
+}
+
+.title-word-1 {
+    --color-1: #DF8453;
+    --color-2: #3D8DAE;
+    --color-3: #E4A9A8;
+}
+
+.title-word-2 {
+    --color-1: #DBAD4A;
+    --color-2: #ACCFCB;
+    --color-3: #17494D;
+}
+
+.title-word-3 {
+    --color-1: #ACCFCB;
+    --color-2: #E4A9A8;
+    --color-3: #ACCFCB;
+}
+
+.title-word-4 {
+    --color-1: #3D8DAE;
+    --color-2: #DF8453;
+    --color-3: #E4A9A8;
+}
+
+@keyframes color-animation {
+    0% {
+        color: var(--color-1)
+    }
+
+    32% {
+        color: var(--color-1)
+    }
+
+    33% {
+        color: var(--color-2)
+    }
+
+    65% {
+        color: var(--color-2)
+    }
+
+    66% {
+        color: var(--color-3)
+    }
+
+    99% {
+        color: var(--color-3)
+    }
+
+    100% {
+        color: var(--color-1)
+    }
+}
+
+/*some visual styles.*/
+
+.wordcontainer {
+    display: grid;
+    place-items: center;
+    text-align: center;
+    height: 70vh
+}
+
+.title {
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    font-size: 7.5vw;
+    text-transform: uppercase;
+}
+
+div.quote-container p {
     color: #346a9c;
     font-size: x-large;
     text-align: center;
@@ -137,6 +159,7 @@ div.quote-container p{
     margin-top: 10px;
     margin-bottom: auto;
 }
+
 div.HomePage1 ul {
     position: absolute;
     margin-top: 70px;
@@ -169,20 +192,22 @@ div.homePageDiv1 ul li a:hover {
     text-decoration: none;
     padding: 10px;
 }
-  #get-quote-btn{
+
+#get-quote-btn {
     text-align: center;
     background: #2C325A;
     color: white;
     font-size: 13px;
     border: 1px solid grey;
-    border-left: none; 
+    border-left: none;
     cursor: pointer;
     text-align: center;
     padding-bottom: 10px;
     margin-left: 45%;
     margin-top: 10px;
     margin-bottom: auto;
-  }  
+}
+
 /* HOMPEPAGE END */
 
 /* MY PROFILE PAGE START*/
@@ -223,9 +248,9 @@ body {
     justify-content: space-evenly;
 }
 
-.read {    
+.read {
     display: flex;
-    justify-content: space-evenly; 
+    justify-content: space-evenly;
     border-radius: 25px;
     width: 40%;
     height: 100%;
@@ -250,7 +275,7 @@ body {
     margin: 5%;
     padding: 0;
     max-width: 100%;
-    max-height:100%;
+    max-height: 100%;
 }
 
 .read-img img {
@@ -280,10 +305,12 @@ body {
     transform: scale(1.035);
     opacity: 0.6;
 }
+
 #to-be-read-div:hover {
     transform: scale(1.035);
     opacity: 0.6;
 }
+
 /* MY PROFILE PAGE END*/
 
 
@@ -359,22 +386,28 @@ form#loginForm span {
     font-size: 15px;
     margin-bottom: 20px;
 }
+
 /* LOGIN PAGE END */
 
 /* progress bar  style*/
 
 @keyframes progress {
-    0% { --percentage: 0; }
-    100% { --percentage: var(--value); }
-  }
-  
-  @property --percentage {
+    0% {
+        --percentage: 0;
+    }
+
+    100% {
+        --percentage: var(--value);
+    }
+}
+
+@property --percentage {
     syntax: '<number>';
     inherits: true;
     initial-value: 0;
-  }
-  
-  [role="progressbar"] {
+}
+
+[role="progressbar"] {
     --percentage: var(--value);
     --primary: #369;
     --secondary: #adf;
@@ -387,9 +420,9 @@ form#loginForm span {
     overflow: hidden;
     display: grid;
     place-items: center;
-  }
-  
-  [role="progressbar"]::before {
+}
+
+[role="progressbar"]::before {
     content: "";
     position: absolute;
     top: 0;
@@ -401,25 +434,74 @@ form#loginForm span {
     mask-mode: alpha;
     -webkit-mask: radial-gradient(#0000 55%, #000 0);
     -webkit-mask-mode: alpha;
-  }
-  
-  [role="progressbar"]::after {
+}
+
+[role="progressbar"]::after {
     counter-reset: percentage var(--value);
     content: counter(percentage) '%';
     font-family: Helvetica, Arial, sans-serif;
     font-size: calc(var(--size) / 5);
     color: var(--primary);
-  }
+}
 
-   /* Progress Bar adjust in the div */
+/* Progress Bar adjust in the div */
 
-   .grid-item .progress{
-    
+.grid-item .progress {
+
     bottom: 0;
     right: 0;
     margin-left: 65%;
-    
-  }
 
-  
-  
+}
+
+/* START ADMIN PAGE */
+.admcred {
+    background: linear-gradient(45deg, #a7bed3c2, #fcf5c7b9);
+    color: #346a9c;
+    transition: .2s ease;
+    font-size: large;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.stats ul li {
+    display: inline;
+    align-items: center;
+}
+
+.stats ul li {
+    color: rgb(39, 2, 2);
+    font-size: medium;
+    text-decoration: none;
+    padding: 10px 16px;
+}
+
+.stats ul li {
+    background: linear-gradient(45deg, #ffe2c8d4, #ffc7d7c7);
+    cursor: pointer;
+}
+.usertable{
+    padding-top: 60px;
+}
+.usertable h1{
+    margin-left: 45%;
+}
+/* END ADMIN PAGE */
+
+/* TABLE STYLING */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+/* END OF TABLE */

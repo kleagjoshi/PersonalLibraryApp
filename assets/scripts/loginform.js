@@ -22,6 +22,11 @@ function validateAndSubmit(event){
             $("#passwordSpn").html("Password must be a minimum of 8 characters or numbers");
             isValidated = false;
         }
+    const cpassword = $("#cpassword").val();
+        if(password != cpassword){
+            $("#cpasswordSpn").html("Password doesn't match");
+            isValidated = false;
+        }
 
     //Validate input values
 
