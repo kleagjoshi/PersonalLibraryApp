@@ -1,14 +1,18 @@
 class Book{
-    constructor(_id, _title, _author,_description, _imageurl,_toBeRead, _readBook){
-
+    constructor(_id, _title, _authors, _description, _coverUrl, _genre) {
         this.id = _id;
         this.title = _title;
-        this.author = _author;
-        this.description=_description;
-        this.imageurl=_imageurl;
-        this.toBeRead=_toBeRead;
-        this.readBook=_readBook;
-        
+        this.authors = _authors;
+        this.description = _description;
+        this.coverUrl = _coverUrl;
+        this.genre = _genre;
+    }
+}
+
+class Author{
+    constructor(_fullname)
+    {
+        this.fullName=_fullname;
     }
 }
 
@@ -18,44 +22,72 @@ function readFunction1(event){
 $("#closeAddModalSpn").click(function(){
     $("#addBookModal").hide();
 });
+}
 
+function readFunction2(event){
+    $("#addAuthorModal").show();
+
+$("#closeAddAuthorModalSpn").click(function(){
+    $("#addAuthorModal").hide();
+});
 }
 
 //Add event to Add Book button
 document.addEventListener('DOMContentLoaded',(event)=>{
 
-    const addButton = document.getElementById("addBtn");
+    const addButton = document.getElementById("addBookBtn");
     addButton.addEventListener('click',readFunction1)
     
 })
 
+//Add event to Add Author button
+document.addEventListener('DOMContentLoaded',(event)=>{
 
-const books = JSON.parse(localStorage.getItem('books')) || [];
+    const addButton = document.getElementById("addAuthorBtn");
+    addButton.addEventListener('click',readFunction2)
+    
+})
 
-//adding 2 default books 
-if(books.length==0)
-{
-    handleSubmit('BABEL', 'R. F. Kuang', 'From award-winning author R. F. Kuang comes Babel, a historical fantasy epic that grapples with student revolutions, colonial resistance, and the use of language and translation as the dominating tool of the British Empire.', 'https://i.harperapps.com/hcanz/covers/9780008501822/x480.jpg');
-    handleSubmit('If We Were Villains', 'M.L. Rio', 'Oliver Marks has just served ten years in jail - for a murder he may or may not have committed. On the day he is released, he is greeted by the man who put him in prison. Detective Colborne is retiring, but before he does, he wants to know what really happened a decade ago.', 'https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1480717682i/30319086.jpg'); 
+
+
+var books = [];
+
+console.log('Books (before request) = ', books);
+
+//Request books data from the api endpoint
+const settings = {
+    async: true,
+    crossDomain: true,
+    url: 'https://localhost:44320/api/Books/get-all-books',
+    method: 'GET',
+    headers: {
+        'content-type': 'application/json'
+    }
+};
+
+$.ajax(settings).done(function (response) {
+    console.log(response);
+
+    books = response;
+
+    console.log('Books (after request response) = ', books);
 
     populateGrid();
-    location.reload();
-}
-
+});
 document.getElementById("myGrid").innerHTML=" ";
 
 function populateGrid(){
     $.each(books, function(index, book){
         const item = `<div class="grid-item">
                     <div class="img-container">
-                        <img class="image" src="${book.imageurl}">
+                        <img class="image" src="${book.coverUrl}">
                         <div class="middle">
                             <div class="text">${book.description}</div>
                         </div>
                     </div>
-                    <div class="attr" id="">${book.title} <br> ${book.author}</div>
+                    <div class="attr" id="">${book.title} <br> ${book.authorNames.join(', ')} <br>${book.genreTitle} </div>
                     <div>
-                         <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn" data-read-id="${book.id}">Read Me</button>   
+                         <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn" data-read-id="${book.bookId}">Read Me</button>    
                     </div>
                 </div>`;
         
@@ -64,45 +96,65 @@ function populateGrid(){
     });
 }
 
-populateGrid();
 
 
 //this function makes the form function as it should
 
-function handleSubmit(_title, _author, _description, _image){
+function handleSubmit(_title, _authors, _description, _genre, _image) {
+    // Convert author IDs to integers
+    const authorIds = _authors.map(authorId => parseInt(authorId, 10));
+
+
     // Create Object
     var newBook = {
-        id: Math.floor(Math.random() * 1000000), // Random number between 0 and 1000000
-        title:_title,
-        author:_author,
-        description:_description,
-        imageurl:_image,
-        toBeRead:false,
-        readBook:false
+        
+        title: _title,
+        authorIds: authorIds, // Update to match the server's expected format
+        description: _description,
+        genreId: parseInt(_genre, 10), // Convert genre ID to integer
+        coverUrl: _image
+    };
 
-    }
+    //Request orders data from the api endpoint
+    const settings = {
+        async: true,
+        crossDomain: true,
+        url: 'https://localhost:44320/api/Books/add-book-with-authors',
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        data: JSON.stringify(newBook)
+    };
+    console.log(newBook);
 
-    // Retrieve existing books from localStorage, or initialize an empty array if none exist
-    var existingBooks = JSON.parse(localStorage.getItem('books')) || [];
+    $.ajax(settings).done(function (response) {
+        alert('Book added to json file');
+    });
 
-    // Add the new book to the array
-    existingBooks.push(newBook);
-
-    // Update localStorage with the new array
-    localStorage.setItem('books', JSON.stringify(existingBooks));
 
 }
 
-$(document).ready(function(){
-    $("#submitBtn").click(function() {
+$(document).ready(function () {
+    $("#submitBtn").click(function () {
         // Get values from form fields
         var title = $("#bookTitle").val();
-        var author = $("#author").val();
+        
+        // Authors are selected using checkboxes, so retrieve them differently
+        var authors = [];
+        $("#authorsDropdown input:checked").each(function () {
+            authors.push($(this).val());
+        });
+
         var description = $("#description").val();
+        var genre = $("#genre").val(); // Get the selected genre
         var imageurl = $("#image").val();
 
         // Call the handleSubmit function with the form values
-        handleSubmit(title, author, description, imageurl);
+        handleSubmit(title, authors, description, genre, imageurl);
+        $("#addBookModal").hide();
+        location.reload();
+
     });
 })
 
@@ -115,7 +167,7 @@ $(gridBody).on('click', "#readBtn", function(){
     const book = books.find(n => n.id == bookId);
     
 
-    console.log($`Selected order = ${book}`);
+    console.log($`Selected book = ${book}`);
 
     book.toBeRead=true;
 
@@ -174,3 +226,108 @@ function previewImage(input) {
         preview.style.display = 'none';
     }
 }
+
+//add author dropdown to add a book form
+document.addEventListener('DOMContentLoaded', function () {
+    // Fetch authors from your API endpoint
+    fetch('https://localhost:44320/get-all-authors')
+        .then(response => response.json())
+        .then(authors => {
+            const authorsDropdown = document.getElementById('authorsDropdown');
+
+            // Create checkboxes for each author
+            authors.forEach(author => {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'authors';
+                checkbox.value = author.authorId; 
+                const label = document.createElement('label');
+                label.appendChild(document.createTextNode(author.fullName)); // Use the author's name or another property
+
+                const authorDiv = document.createElement('div');
+                authorDiv.appendChild(checkbox);
+                authorDiv.appendChild(label);
+
+                authorsDropdown.appendChild(authorDiv);
+            });
+        })
+        .catch(error => console.error('Error fetching authors:', error));
+});
+
+function toggleAuthorsDropdown() {
+    const authorsDropdown = document.getElementById('authorsDropdown');
+    authorsDropdown.style.display = (authorsDropdown.style.display === 'none' || authorsDropdown.style.display === '') ? 'block' : 'none';
+}
+
+//add genre dropdown
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Fetch genres from your API endpoint
+    fetch('https://localhost:44320/api/Genres/get-all-genres')
+        .then(response => response.json())
+        .then(genres => {
+            const genreDropdown = document.getElementById('genre');
+
+            // Dynamically populate the dropdown options
+            genres.forEach(genre => {
+                const option = document.createElement('option');
+                option.value = genre.genreId;  // Set the value
+                option.text = genre.genreTitle;   // Set the displayed text
+                genreDropdown.add(option);
+            });
+        })
+        .catch(error => console.error('Error fetching genres:', error));
+});
+
+// Event listener for the form submission
+document.getElementById('bookForm').addEventListener('submit', function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Get the selected genre value
+    const selectedGenre = document.getElementById('genre').value;
+
+});
+
+//add authors by form
+
+function handleAuthorSubmit(_fullname) {
+  // Create Object
+    var newAuthor = {
+        fullName: _fullname   
+    };
+
+    //Request orders data from the api endpoint
+    const settings = {
+        async: true,
+        crossDomain: true,
+        url: 'https://localhost:44320/add-author',
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
+        data: JSON.stringify(newAuthor)
+    };
+    console.log(newAuthor);
+
+    $.ajax(settings).done(function (response) {
+        alert('Author added to json file');
+    });
+
+
+}
+
+$(document).ready(function () {
+    $("#submitAuthorBtn").click(function () {
+        // Get values from form fields
+        var fullName = $("#fullName").val();
+        
+        
+
+        // Call the handleSubmit function with the form values
+        handleAuthorSubmit(fullName);
+        $("#addAuthorModal").hide();
+        
+
+    });
+})
+

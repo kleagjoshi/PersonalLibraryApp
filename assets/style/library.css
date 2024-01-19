@@ -310,3 +310,25 @@ form#bookForm div{
     margin-bottom: 20px;
 }
 
+/* authors drop down menu */
+#authorsDropdown,
+#genreDropdown {
+  display: none;
+  margin-top: 5px;
+}
+
+.arrow-down {
+  cursor: pointer;
+  user-select: none;
+  margin-left: 5px;
+}
+
+#genre {
+  width: 100%; /* Make the genre input full-width */
+  padding: 5px; /* Add some padding for better appearance */
+}
+
+.genre-option {
+  cursor: pointer;
+  padding: 5px;
+}
