@@ -220,22 +220,39 @@ $("#closeReadSpn").click(function(){
 
 // Search function
 
-function search(){
+// function search(){
 
-    const test = document.getElementById("inputId").value;
-    const book1=test.toLowerCase();
+//     const test = document.getElementById("inputId").value;
+//     const book1=test.toLowerCase();
 
-    var allBooks = JSON.parse(localStorage.getItem('books')) || [];
+//     var allBooks = JSON.parse(localStorage.getItem('books')) || [];
     
     
-    const book = allBooks.find(n=> n.title.toLowerCase()==book1);
-    if(book){
-        alert("YAY!! \n The book ' "+book.title+" ' you are searching is in our library.");
-    }
-    else{
-        alert("Error 404!!!\nHahaha Just kidding :) \nWe don't have this book.");
-    }
+//     const book = allBooks.find(n=> n.title.toLowerCase()==book1);
+//     if(book){
+//         alert("YAY!! \n The book ' "+book.title+" ' you are searching is in our library.");
+//     }
+//     else{
+//         alert("Error 404!!!\nHahaha Just kidding :) \nWe don't have this book.");
+//     }
+// }
+function searchBooks() {
+    var title = $('#searchTitle').val();
+
+    $.ajax({
+        url: 'https://localhost:44320/api/Books/search-book-by-title/${title}' ,
+        type: 'POST',
+        success: function (data) {
+            displaySearchResults(data);
+            alert("YAY!! \n The book ' "+book.title+" ' you are searching is in our library.");
+        },
+        error: function (error) {
+            alert("Error 404!!!\nWe don't have this book :(.");
+            console.error('Error searching books:', error.responseText);
+        }
+    });
 }
+
 
 document.addEventListener('DOMContentLoaded',(event)=>{
 
