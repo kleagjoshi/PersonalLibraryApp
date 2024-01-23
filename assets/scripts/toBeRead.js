@@ -1,22 +1,69 @@
-//populate grid on to be read page
-const books = JSON.parse(localStorage.getItem('books')) || [];
+//populate to be read 
+//decode token
+const token = localStorage.getItem('token'); // Replace 'yourTokenKey' with the actual key you used to store the token
 
+if (token) {
+  // Decode the token
+  const decodedToken = parseJwt(token);
+
+  // Access the claims from the decoded token
+  var _userId = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']; // Example: accessing the 'sub' claim (subject)
+
+  // Use the claims as needed
+  //console.log('User ID:', _userId);
+}
+
+// Function to decode a JWT token
+function parseJwt(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+
+  return JSON.parse(jsonPayload);
+}
+
+
+
+var books = [];
+
+console.log('Books (before request) = ', books);
+
+//Request books data from the api endpoint
+const settings = {
+    async: true,
+    crossDomain: true,
+    url: 'https://localhost:44320/api/UserBooks/get-all-books?status=' + 0 + '&userId=' + _userId,
+    method: 'GET',
+    headers: {
+        'content-type': 'application/json'
+    }
+};
+
+$.ajax(settings).done(function (response) {
+    console.log(response);
+
+    books = response;
+
+    console.log('Books (after request response) = ', books);
+
+    populateGrid();
+});
 document.getElementById("myGrid").innerHTML=" ";
 
-const filteredBooks = books.filter(book => book.toBeRead == true);
-
 function populateGrid(){
-    $.each(filteredBooks, function(index, book){
+    $.each(books, function(index, book){
         const item = `<div class="grid-item">
                     <div class="img-container">
-                        <img class="image" src="${book.imageurl}">
+                        <img class="image" src="${book.coverUrl}">
                         <div class="middle">
                             <div class="text">${book.description}</div>
                         </div>
                     </div>
-                    <div class="attr" id="">${book.title} <br> ${book.author}</div>
+                    <div class="attr" id="">${book.title} <br> ${book.authorNames.join(', ')} <br>${book.genreTitle} </div>
                     <div>
-                         <button class ="glow-on-hover" type="button" name="startReadBtn" id="startReadBtn" data-read-id="${book.id}">Start Reading</button>   
+                    <button class ="glow-on-hover" type="button" name="startReadBtn" id="startReadBtn" data-read-id="${book.bookId}">Start Reading</button>    
                     </div>
                 </div>`;
         
@@ -25,25 +72,32 @@ function populateGrid(){
     });
 }
 
-populateGrid();
 
 //make the button start reading functional
 
 const gridBody = document.getElementById("myGrid");
 
 $(gridBody).on('click', "#startReadBtn", function(){
-    const bookId = $(this).data('read-id');
-    const book = books.find(n => n.id == bookId);
+    const _bookId = $(this).data('read-id');
    
-    book.readBook=true; //add to already read
-    book.toBeRead=false; //remove from wishing list
+    const settings = {
+        async: true,
+        crossDomain: true,
+        url: 'https://localhost:44320/api/UserBooks/update-user-book?bookId=' + _bookId + '&userId=' + _userId,
+        method: 'PUT',
+        headers: {
+            'content-type': 'application/json'
+        },
+        
+    };
+    
+    $.ajax(settings).done(function (response) {
+        alert('UserBook added to reading');
+    });
+    
+    // $("#book-name").text(book.title);
 
-     // Update the books in localStorage
-    localStorage.setItem('books', JSON.stringify(books));
-
-    $("#book-name").text(book.title);
-
-    $("#readModal").show();
+$("#readModal").show();
 })
 
 
