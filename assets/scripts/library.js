@@ -163,21 +163,54 @@ $(document).ready(function () {
 const gridBody = document.getElementById("myGrid");
 
 $(gridBody).on('click', "#readBtn", function(){
-    const bookId = $(this).data('read-id');
-    const book = books.find(n => n.id == bookId);
+    const _bookId = $(this).data('read-id');
     
+   
+    //decode the token
+const token = localStorage.getItem('token');
 
-    console.log($`Selected book = ${book}`);
+if (token) {
+  const decodedToken = parseJwt(token);
+  var _userId = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']; 
+}
+// Function to decode a JWT token
+function parseJwt(token) {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
 
-    book.toBeRead=true;
+  return JSON.parse(jsonPayload);
+}
 
-     // Update the orders in localStorage
-    localStorage.setItem('books', JSON.stringify(books));
+//add this record (user-book) to db
 
-    $("#book-name").text(book.title);
+var newUserBook = {
+    bookId: _bookId,
+    userId:_userId  
+};
 
-    $("#readModal").show();
-})
+
+// api endpoint
+const settings = {
+    async: true,
+    crossDomain: true,
+    url: 'https://localhost:44320/api/UserBooks/add-book-user?bookId=' + newUserBook.bookId + '&userId=' + newUserBook.userId,
+    method: 'POST',
+    headers: {
+        'content-type': 'application/json'
+    },
+    
+};
+
+$.ajax(settings).done(function (response) {
+    alert('UserBook added to json file');
+});
+
+//$("#book-name").text(Book.title);
+ $("#readModal").show();
+});
 
 
 $("#closeReadSpn").click(function(){
@@ -330,4 +363,5 @@ $(document).ready(function () {
 
     });
 })
+
 
