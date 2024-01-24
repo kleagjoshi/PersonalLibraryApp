@@ -313,6 +313,7 @@ form#bookForm div{
 /* authors drop down menu */
 #authorsDropdown,
 #genreDropdown {
+  background-color: #dacce9;
   display: none;
   margin-top: 5px;
 }
@@ -321,14 +322,15 @@ form#bookForm div{
   cursor: pointer;
   user-select: none;
   margin-left: 5px;
-}
+} 
 
 #genre {
-  width: 100%; /* Make the genre input full-width */
-  padding: 5px; /* Add some padding for better appearance */
+  width: 100%;
+  padding: 5px; 
 }
 
 .genre-option {
   cursor: pointer;
   padding: 5px;
 }
+
