@@ -31,6 +31,23 @@ function readFunction2(event) {
     });
 }
 
+function editFunction(event){
+    $("#editBookModal").show();
+
+$("#closeEditBookModalSpn").click(function(){
+    $("#editBookModal").hide();
+});
+}
+
+function deleteFunction(event){
+    $("#deleteBookModal").show();
+
+$("#closeDeleteBookModalSpn").click(function(){
+    $("#deleteBookModal").hide();
+});
+}
+
+
 //hiding add book and add author buttons for
 // const isAdmin = decodedToken.getRole('isAdmin') === 'true';
 // if (isAdmin) {
@@ -73,7 +90,21 @@ document.addEventListener('DOMContentLoaded',(event)=>{
 
  })
 
+ //Add event to Edit Book button
+document.addEventListener('DOMContentLoaded',(event)=>{
 
+    const editButton = document.getElementById("editBookBtn");
+    addButton.addEventListener('click',editFunction)
+    
+})
+
+//Add event to Delete Book button
+document.addEventListener('DOMContentLoaded',(event)=>{
+
+    const editButton = document.getElementById("deleteBookBtn");
+    addButton.addEventListener('click',deleteFunction)
+    
+})
 
 var books = [];
 
@@ -241,6 +272,129 @@ $(gridBody).on('click', "#readBtn", function () {
 $("#closeReadSpn").click(function () {
     $("#readModal").hide();
 });
+
+
+// START OF EDIT
+
+//form functionality for EDIT
+function handleEditSubmit(_id, _title, _authors, _description, _genre, _image) {
+    // Convert author IDs to integers
+    const authorIds = _authors.map(authorId => parseInt(authorId, 10));
+
+    // Create Object
+    var updatedBook = {
+        title: _title,
+        authorIds: authorIds, // Update to match the server's expected format
+        description: _description,
+        genreId: parseInt(_genre, 10), // Convert genre ID to integer
+        coverUrl: _image
+    };
+
+    //Request orders data from the api endpoint
+    const settings = {
+        async: true,
+        crossDomain: true,
+        url: `https://localhost:44320/api/Books/update-book/${_id}`,
+        method: 'PUT',
+        headers: {
+            'content-type': 'application/json'
+        },
+        data: JSON.stringify(updatedBook)
+    };
+    console.log(updatedBook);
+
+    $.ajax(settings).done(function (response) {
+        alert('Book updated in json file');
+    });
+}
+
+$(document).ready(function () {
+    $("#submitEditBtn").click(function () {
+        // Get values from form fields
+        var id = $("#bookId").val();
+        var title = $("#bookTitle").val();
+        
+        var authors = [];
+        $("#authorsDropdown input:checked").each(function () {
+            authors.push($(this).val());
+        });
+    
+        var description = $("#description").val();
+        var genre = $("#genre").val(); // Get the selected genre
+        var imageurl = $("#image").val();
+    
+        // Call the handleEditSubmit function with the form values
+        handleEditSubmit(id, title, authors, description, genre, imageurl);
+        $("#editBookModal").hide();
+        location.reload();
+    });
+})
+
+//add functionality to edit button
+$(gridBody).on('click', "#editBtn", function(){
+    const bookId = $(this).data('edit-id');
+    const book = books.find(n => n.id == bookId);
+    
+    populateEditForm(book);
+    $("#editBookModal").show();
+    
+    function populateEditForm(book){
+        $("#editBookTitle").val(book.title);
+        $("#editBookAuthor").val(book.authors);
+        $("#editBookDescription").val(book.description);
+        $("#editBookGenre").val(book.genre);
+        $("#editBookCoverUrl").val(book.coverUrl);
+    }
+})
+
+$("#closeEditModalSpn").click(function(){
+    $("#editBookModal").hide();
+});
+
+// END OF EDIT
+
+// START OF DELETE
+//add functionality to delete button
+$(gridBody).on('click', "#readBtn", function(){
+    function deleteFunction(event) {
+        const bookId = event.target.dataset.readId;
+        $("#deleteBookModal").show();
+      
+        // Add a click event listener to the confirm button
+        $("#confirmDeleteBtn").click(function () {
+          // Call the API to delete the book, like handlesubmit
+          const settings = {
+            async: true,
+            crossDomain: true,
+            url: `https://localhost:44320/api/Books/delete-a-book-by-id/${bookId}`,
+            method: 'DELETE',
+            headers: {
+              'content-type': 'application/json'
+            }
+          };
+      
+          $.ajax(settings).done(function (response) {
+            // Remove the book from the grid
+            $("#book-" + bookId).remove();
+            // Hide the confirmation modal
+            $("#deleteBookModal").hide();
+            alert('Book deleted!');
+          });
+        });
+      
+        // Add a click event listener to the cancel button
+        $("#cancelDeleteBtn").click(function () {
+          // Close the confirmation modal
+          $("#deleteBookModal").hide();
+        });
+      
+        $("#closeDeleteBookModalSpn").click(function(){
+          $("#deleteBookModal").hide();
+        });
+      }
+})
+
+// END OF DELETE
 
 
 // Search function
