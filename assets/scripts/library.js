@@ -90,21 +90,7 @@ document.addEventListener('DOMContentLoaded',(event)=>{
 
  })
 
- //Add event to Edit Book button
-document.addEventListener('DOMContentLoaded',(event)=>{
 
-    const editButton = document.getElementById("editBookBtn");
-    addButton.addEventListener('click',editFunction)
-    
-})
-
-//Add event to Delete Book button
-document.addEventListener('DOMContentLoaded',(event)=>{
-
-    const editButton = document.getElementById("deleteBookBtn");
-    addButton.addEventListener('click',deleteFunction)
-    
-})
 
 var books = [];
 
@@ -143,7 +129,9 @@ function populateGrid() {
                     </div>
                     <div class="attr" id="">${book.title} <br> ${book.authorNames.join(', ')} <br>${book.genreTitle} </div>
                     <div>
-                         <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn" data-read-id="${book.bookId}">Read Me</button>    
+                         <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn" data-read-id="${book.bookId}">Read Me</button>
+                         <button class ="glow-on-hover" type="button" name="editBtn" id="editBtn" data-edit-id="${book.bookId}">Edit</button> 
+                         <button class ="glow-on-hover" type="button" name="deleteBtn" id="deleteBtn" data-delete-id="${book.bookId}">Delete</button>    
                     </div>
                 </div>`;
 
@@ -355,45 +343,48 @@ $("#closeEditModalSpn").click(function(){
 
 // START OF DELETE
 //add functionality to delete button
-$(gridBody).on('click', "#readBtn", function(){
-    function deleteFunction(event) {
-        const bookId = event.target.dataset.readId;
+$(gridBody).on('click', "#deleteBtn", function(){
+    
+        bookId = $(this).data('delete-id');
         $("#deleteBookModal").show();
       
-        // Add a click event listener to the confirm button
-        $("#confirmDeleteBtn").click(function () {
-          // Call the API to delete the book, like handlesubmit
-          const settings = {
-            async: true,
-            crossDomain: true,
-            url: `https://localhost:44320/api/Books/delete-a-book-by-id/${bookId}`,
-            method: 'DELETE',
-            headers: {
-              'content-type': 'application/json'
-            }
-          };
-      
-          $.ajax(settings).done(function (response) {
-            // Remove the book from the grid
-            $("#book-" + bookId).remove();
-            // Hide the confirmation modal
-            $("#deleteBookModal").hide();
-            alert('Book deleted!');
-          });
-        });
-      
-        // Add a click event listener to the cancel button
-        $("#cancelDeleteBtn").click(function () {
-          // Close the confirmation modal
-          $("#deleteBookModal").hide();
-        });
-      
-        $("#closeDeleteBookModalSpn").click(function(){
-          $("#deleteBookModal").hide();
-        });
-      }
-})
+});
 
+// Add a click event listener to the confirm button
+$("#confirmDeleteBtn").click(function () {
+    // Call the API to delete the book, like handlesubmit
+    const settings = {
+      async: true,
+      crossDomain: true,
+      url: `https://localhost:44320/api/Books/delete-a-book-by-id/${bookId}`,
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      }
+    };
+
+    $.ajax(settings).done(function (response) {
+     if(response)
+     {
+      alert("Book is deleted");
+     }
+     else{
+      alert("This book can not be deleted");
+     }
+      // Hide the confirmation modal
+      $("#deleteBookModal").hide();
+    });
+  });
+  
+  // Add a click event listener to the cancel button
+  $("#cancelDeleteBtn").click(function () {
+    // Close the confirmation modal
+    $("#deleteBookModal").hide();
+  });
+
+  $("#closeDeleteBookModalSpn").click(function(){
+    $("#deleteBookModal").hide();
+  });
 // END OF DELETE
 
 
@@ -437,7 +428,7 @@ function searchBooks() {
 document.addEventListener('DOMContentLoaded', (event) => {
 
     const searchButton = document.getElementById("searchBtn");
-    searchButton.addEventListener('click', search);
+    searchButton.addEventListener('click', searchBooks);
 
 
 })
