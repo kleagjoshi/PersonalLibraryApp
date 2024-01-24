@@ -410,7 +410,7 @@ function searchBooks() {
     var title = $('#searchTitle').val();
 
     $.ajax({
-        url: 'https://localhost:44320/api/Books/search-book-by-title/${title}',
+        url: `https://localhost:44320/api/Books/search-book-by-title/${title}`,
         type: 'POST',
         success: function (data) {
             displaySearchResults(data);
