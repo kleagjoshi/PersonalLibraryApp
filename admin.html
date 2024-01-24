@@ -23,44 +23,81 @@
 <div class="admcred">
     <h1>ADMINISTRATOR</h1>
     <h2>Admin credentials:</h2>
-    <p>Username: Admin</p>
-    <p>email: admin@gmail.com</p>
+    <p>Username: AdminAdmin</p>
+    <p>email: admin@admin.com</p>
 </div>
 
 <div class="stats">
-<ul>
-    <li>USERS: 10</li>
-    <li>BOOKS: 100</li>
-    <li>AUTHORS: 105</li>
-</ul>
+    <ul>
+        <li id="usersCount">USERS: Loading...</li>
+        <li id="booksCount">BOOKS: Loading...</li>
+        <li id="authorsCount">AUTHORS: Loading...</li>
+    </ul>
 </div>
 
 <div class="usertable">
     <h1>USERS TABLE</h1>
-    <table>
+    <table id="usersTbl">
         <thead>
             <tr>
-                <th>Column 1</th>
-                <th>Column 2</th>
-                <th>Column 3</th>
-                <th>Column 4</th>
-                <th>Column 5</th>
-                <th>Column 6</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Books on wishing list</th>
+                <th>Books on reading</th>
+                <th>Actions</th>
             </tr>
         </thead>
+
+        
         <tbody>
             <!-- Your dynamic data will be inserted here -->
-            <tr>
-                <td>Data 1</td>
-                <td>Data 2</td>
-                <td>Data 3</td>
-                <td>Data 4</td>
-                <td>Data 5</td>
-                <td>Data 6</td>
-            </tr>
+            
             <!-- Add more rows as needed -->
         </tbody>
     </table>
+     <!-- START: Modals -->
+
+    <!-- Inside the body tag, but outside of other tags -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="header-container">
+                <h5>Edit Order</h5>
+                <span id="closeEditModalSpn" class="close">&times;</span>
+            </div>
+            
+            <form id="userForm">
+                <div>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" placeholder="Username">
+                    <span id="userNameSpn"></span>
+                </div>
+        
+                <div>
+                    <label for="email">Email address</label>
+                    <input type="email" id="email" name="email" placeholder="User's email address">
+                    <span id="emailSpn"></span>
+                </div>
+        
+                <div>
+                    <button id="updateBtn">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Inside the body tag, but outside of other tags -->
+    <div id="removeModal" class="modal">
+        <div class="modal-content">
+            <!-- <h2 id="remove-username"></h2> -->
+            <p>Are you sure you want to remove this user?</p>
+            <p>
+                <button type="button" id="cancelRemoveBtn">Cancel</button>
+                <button type="button" id="confirmBtn">Confirm</button>
+            </p>
+        </div>
+    </div>
+
+    <!-- END: Modals -->
 </div>
 
 
@@ -73,6 +110,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
    
         <script src="Assets/scripts/adminshow.js"></script>
+        <script src="assets/scripts/admin.js"></script>
 
 </body>
 
