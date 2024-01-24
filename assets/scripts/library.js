@@ -1,4 +1,4 @@
-class Book{
+class Book {
     constructor(_id, _title, _authors, _description, _coverUrl, _genre) {
         this.id = _id;
         this.title = _title;
@@ -9,44 +9,69 @@ class Book{
     }
 }
 
-class Author{
-    constructor(_fullname)
-    {
-        this.fullName=_fullname;
+class Author {
+    constructor(_fullname) {
+        this.fullName = _fullname;
     }
 }
 
-function readFunction1(event){
+function readFunction1(event) {
     $("#addBookModal").show();
 
-$("#closeAddModalSpn").click(function(){
-    $("#addBookModal").hide();
-});
+    $("#closeAddModalSpn").click(function () {
+        $("#addBookModal").hide();
+    });
 }
 
-function readFunction2(event){
+function readFunction2(event) {
     $("#addAuthorModal").show();
 
-$("#closeAddAuthorModalSpn").click(function(){
-    $("#addAuthorModal").hide();
-});
+    $("#closeAddAuthorModalSpn").click(function () {
+        $("#addAuthorModal").hide();
+    });
 }
 
-//Add event to Add Book button
-document.addEventListener('DOMContentLoaded',(event)=>{
+//hiding add book and add author buttons for
+// const isAdmin = decodedToken.getRole('isAdmin') === 'true';
+// if (isAdmin) {
+//     //Add event to Add Book button
+//     document.addEventListener('DOMContentLoaded', (event) => {
 
-    const addButton = document.getElementById("addBookBtn");
+//         const addButton = document.getElementById("addBookBtn");
+//         addButton.addEventListener('click', readFunction1)
+
+//     })
+
+//     //Add event to Add Author button
+//     document.addEventListener('DOMContentLoaded', (event) => {
+
+//         const addButton = document.getElementById("addAuthorBtn");
+//         addButton.addEventListener('click', readFunction2)
+
+//     })
+// } else {
+//     const addBookBtn = document.getElementById("addBookBtn");
+//     const addAuthorBtn = document.getElementById("addAuthorBtn");
+//     // Hide the buttons
+//     addBookBtn.style.display = 'none';
+//     addAuthorBtn.style.display = 'none';
+// }
+
+// // //Add event to Add Book button
+ document.addEventListener('DOMContentLoaded',(event)=>{
+
+     const addButton = document.getElementById("addBookBtn");
     addButton.addEventListener('click',readFunction1)
-    
+
 })
 
-//Add event to Add Author button
+ //Add event to Add Author button
 document.addEventListener('DOMContentLoaded',(event)=>{
 
     const addButton = document.getElementById("addAuthorBtn");
-    addButton.addEventListener('click',readFunction2)
-    
-})
+   addButton.addEventListener('click',readFunction2)
+
+ })
 
 
 
@@ -74,10 +99,10 @@ $.ajax(settings).done(function (response) {
 
     populateGrid();
 });
-document.getElementById("myGrid").innerHTML=" ";
+document.getElementById("myGrid").innerHTML = " ";
 
-function populateGrid(){
-    $.each(books, function(index, book){
+function populateGrid() {
+    $.each(books, function (index, book) {
         const item = `<div class="grid-item">
                     <div class="img-container">
                         <img class="image" src="${book.coverUrl}">
@@ -90,9 +115,9 @@ function populateGrid(){
                          <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn" data-read-id="${book.bookId}">Read Me</button>    
                     </div>
                 </div>`;
-        
-                document.getElementById("myGrid").innerHTML += item;
-        
+
+        document.getElementById("myGrid").innerHTML += item;
+
     });
 }
 
@@ -107,7 +132,7 @@ function handleSubmit(_title, _authors, _description, _genre, _image) {
 
     // Create Object
     var newBook = {
-        
+
         title: _title,
         authorIds: authorIds, // Update to match the server's expected format
         description: _description,
@@ -139,7 +164,7 @@ $(document).ready(function () {
     $("#submitBtn").click(function () {
         // Get values from form fields
         var title = $("#bookTitle").val();
-        
+
         // Authors are selected using checkboxes, so retrieve them differently
         var authors = [];
         $("#authorsDropdown input:checked").each(function () {
@@ -162,58 +187,58 @@ $(document).ready(function () {
 //add functionality to read me button
 const gridBody = document.getElementById("myGrid");
 
-$(gridBody).on('click', "#readBtn", function(){
+$(gridBody).on('click', "#readBtn", function () {
     const _bookId = $(this).data('read-id');
-    
-   
+
+
     //decode the token
-const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token');
 
-if (token) {
-  const decodedToken = parseJwt(token);
-  var _userId = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier']; 
-}
-// Function to decode a JWT token
-function parseJwt(token) {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
+    if (token) {
+        const decodedToken = parseJwt(token);
+        var _userId = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+    }
+    // Function to decode a JWT token
+    function parseJwt(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
 
-  return JSON.parse(jsonPayload);
-}
+        return JSON.parse(jsonPayload);
+    }
 
-//add this record (user-book) to db
+    //add this record (user-book) to db
 
-var newUserBook = {
-    bookId: _bookId,
-    userId:_userId  
-};
+    var newUserBook = {
+        bookId: _bookId,
+        userId: _userId
+    };
 
 
-// api endpoint
-const settings = {
-    async: true,
-    crossDomain: true,
-    url: 'https://localhost:44320/api/UserBooks/add-book-user?bookId=' + newUserBook.bookId + '&userId=' + newUserBook.userId,
-    method: 'POST',
-    headers: {
-        'content-type': 'application/json'
-    },
-    
-};
+    // api endpoint
+    const settings = {
+        async: true,
+        crossDomain: true,
+        url: 'https://localhost:44320/api/UserBooks/add-book-user?bookId=' + newUserBook.bookId + '&userId=' + newUserBook.userId,
+        method: 'POST',
+        headers: {
+            'content-type': 'application/json'
+        },
 
-$.ajax(settings).done(function (response) {
-    alert('UserBook added to json file');
+    };
+
+    $.ajax(settings).done(function (response) {
+        alert('UserBook added to json file');
+    });
+
+    //$("#book-name").text(Book.title);
+    $("#readModal").show();
 });
 
-//$("#book-name").text(Book.title);
- $("#readModal").show();
-});
 
-
-$("#closeReadSpn").click(function(){
+$("#closeReadSpn").click(function () {
     $("#readModal").hide();
 });
 
@@ -226,8 +251,8 @@ $("#closeReadSpn").click(function(){
 //     const book1=test.toLowerCase();
 
 //     var allBooks = JSON.parse(localStorage.getItem('books')) || [];
-    
-    
+
+
 //     const book = allBooks.find(n=> n.title.toLowerCase()==book1);
 //     if(book){
 //         alert("YAY!! \n The book ' "+book.title+" ' you are searching is in our library.");
@@ -240,11 +265,12 @@ function searchBooks() {
     var title = $('#searchTitle').val();
 
     $.ajax({
-        url: 'https://localhost:44320/api/Books/search-book-by-title/${title}' ,
+        url: 'https://localhost:44320/api/Books/search-book-by-title/${title}',
         type: 'POST',
         success: function (data) {
             displaySearchResults(data);
-            alert("YAY!! \n The book ' "+book.title+" ' you are searching is in our library.");
+            alert("YAY!! \n The book ' " + book.title + " ' you are searching is in our library.");
+            populateGrid(); //call function to display book
         },
         error: function (error) {
             alert("Error 404!!!\nWe don't have this book :(.");
@@ -254,12 +280,12 @@ function searchBooks() {
 }
 
 
-document.addEventListener('DOMContentLoaded',(event)=>{
+document.addEventListener('DOMContentLoaded', (event) => {
 
     const searchButton = document.getElementById("searchBtn");
-    searchButton.addEventListener('click',search);
+    searchButton.addEventListener('click', search);
 
-    
+
 })
 
 //Image preview in the form
@@ -290,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const checkbox = document.createElement('input');
                 checkbox.type = 'checkbox';
                 checkbox.name = 'authors';
-                checkbox.value = author.authorId; 
+                checkbox.value = author.authorId;
                 const label = document.createElement('label');
                 label.appendChild(document.createTextNode(author.fullName)); // Use the author's name or another property
 
@@ -341,9 +367,9 @@ document.getElementById('bookForm').addEventListener('submit', function (event) 
 //add authors by form
 
 function handleAuthorSubmit(_fullname) {
-  // Create Object
+    // Create Object
     var newAuthor = {
-        fullName: _fullname   
+        fullName: _fullname
     };
 
     //Request orders data from the api endpoint
@@ -370,13 +396,13 @@ $(document).ready(function () {
     $("#submitAuthorBtn").click(function () {
         // Get values from form fields
         var fullName = $("#fullName").val();
-        
-        
+
+
 
         // Call the handleSubmit function with the form values
         handleAuthorSubmit(fullName);
         $("#addAuthorModal").hide();
-        
+
 
     });
 })

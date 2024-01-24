@@ -1,7 +1,26 @@
-// $(document).ready(function () {
+//function to hide or show profile based on role
+
+function updateUI() {
+    const isAdmin = decodedToken.getRole('isAdmin') === 'true';
+
+    // Select the profile links by their IDs
+    const adminProfileLink = document.getElementById('adminProfileLink');
+    const userProfileLink = document.getElementById('userProfileLink');
+
+    // Update profile link visibility based on user role
+    if (isAdmin) {
+        adminProfileLink.style.display = 'inline-block';
+        userProfileLink.style.display = 'none';
+    } else {
+        adminProfileLink.style.display = 'none';
+        userProfileLink.style.display = 'inline-block';
+    }
+}
+//get quote api
+//$(document).ready(function () {
 //     // Attach click event to the button
 //     $('#get-quote-btn').click(function () {
-//         getRandomQuote();
+//         getRandomQuote();  
 //     });
 
 //     // Fetch a random quote on page load
@@ -50,4 +69,3 @@
 //             quoteAuthor.text('');
 //         });
 // }
-
