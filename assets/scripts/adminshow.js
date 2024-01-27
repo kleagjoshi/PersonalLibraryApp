@@ -1,21 +1,4 @@
-//function to hide or show profile based on role
 
-function updateUI() {
-    const isAdmin = decodedToken.getRole('isAdmin') === 'true';
-
-    // Select the profile links by their IDs
-    const adminProfileLink = document.getElementById('adminProfileLink');
-    const userProfileLink = document.getElementById('userProfileLink');
-
-    // Update profile link visibility based on user role
-    if (isAdmin) {
-        adminProfileLink.style.display = 'inline-block';
-        userProfileLink.style.display = 'none';
-    } else {
-        adminProfileLink.style.display = 'none';
-        userProfileLink.style.display = 'inline-block';
-    }
-}
 //get quote api
 //$(document).ready(function () {
 //     // Attach click event to the button
@@ -69,3 +52,27 @@ function updateUI() {
 //             quoteAuthor.text('');
 //         });
 // }
+
+
+//on home page
+
+function ShowLogin(){
+    const authLink = document.getElementById('authLink');
+        console.log(authLink);
+        
+        
+            if (localStorage.getItem('token')) {
+                authLink.innerHTML = '<a href="#" id="logoutLink">Log Out</a>';
+                $('#logoutLink').click(function() {
+                    localStorage.removeItem('token');
+                    window.location.href = 'index.html';
+                });
+            } else {
+                authLink.innerHTML = '<a href="login.html">Log In</a>';
+            }
+        
+};
+
+ShowLogin();
+
+        

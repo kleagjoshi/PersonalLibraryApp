@@ -25,10 +25,36 @@ $(document).ready(function() {
             //Save token to localstorage
             localStorage.setItem('token', response.token);
 
+            const token = localStorage.getItem('token');
+
+    if (token) {
+        const decodedToken = parseJwt(token);
+        var _userRole = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+        console.log(_userRole);
+    }
+    // Function to decode a JWT token
+    function parseJwt(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    }
+
             //Redirect to orders page
             alert('Authorized: Redirecting to your profile');
-            window.location.href = 'myprofile.html';
-            console.log("Authorized");
+           
+
+            if(_userRole=="Admin")
+            {
+                window.location.href = 'admin.html';   
+            }
+            else{
+                window.location.href = 'myprofile.html';
+                
+            }
             
             
         }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -45,21 +71,6 @@ $(document).ready(function() {
             }
         });
 
-        $(document).ready(function() {
-        
-            const authLink = document.getElementById('authLink');
-            console.log(authLink);
-            if (localStorage.getItem('token')) {
-                authLink.innerHTML = '<a href="#" id="logoutLink">Log Out</a>';
-                $('#logoutLink').click(function() {
-                    localStorage.removeItem('token');
-                    window.location.href = 'login.html';
-                });
-            } else {
-                authLink.innerHTML = '<a href="login.html">Log In</a>';
-            }
-
-        });
     });
 });
 
@@ -92,9 +103,9 @@ $(document).ready(function() {
             //Save token to localstorage
             localStorage.setItem('token', response.token);
 
-            //Redirect to orders page
-            alert('Authorized: Redirecting to your profile');
-            window.location.href = 'myprofile.html';
+    //         //decode the token to get the role
+    
+            
             
         }).fail(function (jqXHR, textStatus, errorThrown) {
             console.log('Error = ', errorThrown);
@@ -103,3 +114,7 @@ $(document).ready(function() {
         });
     });
 });
+
+   
+
+
