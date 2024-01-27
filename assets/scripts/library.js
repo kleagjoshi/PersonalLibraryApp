@@ -252,13 +252,45 @@ $("#closeReadSpn").click(function () {
 
 // START OF EDIT
 
+//add functionality to edit button
+$(gridBody).on('click', "#editBtn", function(){
+    bookId = $(this).data('-id');
+    book = books.find(n => n.id == bookId);
+    
+    populateEditForm(book);
+    $("#editBookModal").show();
+    
+    function populateEditForm(book){
+        $("#editBookTitle").val(book.title);
+        $("#editDescription").val(book.description);
+        $("#editGenre option[value='" + book.genreId + "']").prop("selected", true); // Set the selected genre
+        $("#editBookCoverUrl").val(book.coverUrl);
+
+        setTimeout(() => {
+            // Clear the previous selection
+            $("#editAuthorDropdown input[type='checkbox']").prop("checked", false);
+    
+            // Mark the corresponding checkboxes as checked
+            book.authors.forEach(authorId => {
+                $("#editAuthorDropdown input[value='" + authorId + "']").prop("checked", true);
+            });
+        }, 0);
+    
+        
+    }
+})
+
+$("#closeEditModalSpn").click(function(){
+    $("#editBookModal").hide();
+});
+
 //form functionality for EDIT
 function handleEditSubmit(_id, _title, _authors, _description, _genre, _image) {
     // Convert author IDs to integers
     const authorIds = _authors.map(authorId => parseInt(authorId, 10));
 
     // Create Object
-    var updatedBook = {
+    updatedBook = {
         title: _title,
         authorIds: authorIds, // Update to match the server's expected format
         description: _description,
@@ -266,8 +298,8 @@ function handleEditSubmit(_id, _title, _authors, _description, _genre, _image) {
         coverUrl: _image
     };
 
-    //Request orders data from the api endpoint
-    const settings = {
+    //Request data from the api endpoint
+    var settings = {
         async: true,
         crossDomain: true,
         url: `https://localhost:44320/api/Books/update-book/${_id}`,
@@ -280,25 +312,32 @@ function handleEditSubmit(_id, _title, _authors, _description, _genre, _image) {
     console.log(updatedBook);
 
     $.ajax(settings).done(function (response) {
-        alert('Book updated in json file');
+        console.log("response",response);
+        if(response)
+        {
+            alert('User updated successfully');
+        }
+        else{
+            alert("Update failed");
+        }
     });
 }
 
 $(document).ready(function () {
     $("#submitEditBtn").click(function () {
+        var id = $(this).data('-id');
         // Get values from form fields
-        var id = $("#bookId").val();
-        var title = $("#bookTitle").val();
-
+        var title = $("#editBookTitle").val();
+        
         var authors = [];
-        $("#authorsDropdown input:checked").each(function () {
+        $("#editAuthorDropdown input:checked").each(function () {
             authors.push($(this).val());
         });
-
-        var description = $("#description").val();
-        var genre = $("#genre").val(); // Get the selected genre
-        var imageurl = $("#image").val();
-
+    
+        var description = $("#editDescription").val();
+        var genre = $("#editGenre").val(); // Get the selected genre
+        var imageurl = $("#editBookCoverUrl").val();
+    
         // Call the handleEditSubmit function with the form values
         handleEditSubmit(id, title, authors, description, genre, imageurl);
         $("#editBookModal").hide();
@@ -306,74 +345,54 @@ $(document).ready(function () {
     });
 })
 
-//add functionality to edit button
-$(gridBody).on('click', "#editBtn", function () {
-    const bookId = $(this).data('edit-id');
-    const book = books.find(n => n.id == bookId);
-
-    populateEditForm(book);
-    $("#editBookModal").show();
-
-    function populateEditForm(book) {
-        $("#editBookTitle").val(book.title);
-        $("#editBookAuthor").val(book.authors);
-        $("#editBookDescription").val(book.description);
-        $("#editBookGenre").val(book.genre);
-        $("#editBookCoverUrl").val(book.coverUrl);
-    }
-})
-
-$("#closeEditModalSpn").click(function () {
-    $("#editBookModal").hide();
-});
 
 // END OF EDIT
 
 // START OF DELETE
 //add functionality to delete button
-$(gridBody).on('click', "#deleteBtn", function () {
-
-    bookId = $(this).data('delete-id');
-    $("#deleteBookModal").show();
-
+$(gridBody).on('click', "#deleteBtn", function(){
+    
+        bookId = $(this).data('delete-id');
+        $("#deleteBookModal").show();
+      
 });
 
 // Add a click event listener to the confirm button
 $("#confirmDeleteBtn").click(function () {
     // Call the API to delete the book, like handlesubmit
     const settings = {
-        async: true,
-        crossDomain: true,
-        url: `https://localhost:44320/api/Books/delete-a-book-by-id/${bookId}`,
-        method: 'DELETE',
-        headers: {
-            'content-type': 'application/json'
-        }
+      async: true,
+      crossDomain: true,
+      url: `https://localhost:44320/api/Books/delete-a-book-by-id/${bookId}`,
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json'
+      }
     };
 
     $.ajax(settings).done(function (response) {
-        if (response) {
-            alert("Book is deleted");
-        }
-        else {
-            alert("This book can not be deleted");
-        }
-        // Hide the confirmation modal
-        $("#deleteBookModal").hide();
+     if(response)
+     {
+      alert("Book is deleted");
+     }
+     else{
+      alert("This book can not be deleted");
+     }
+      // Hide the confirmation modal
+      $("#deleteBookModal").hide();
     });
-});
-
-// Add a click event listener to the cancel button
-$("#cancelDeleteBtn").click(function () {
+  });
+  
+  // Add a click event listener to the cancel button
+  $("#cancelDeleteBtn").click(function () {
     // Close the confirmation modal
     $("#deleteBookModal").hide();
-});
+  });
 
-$("#closeDeleteBookModalSpn").click(function () {
+  $("#closeDeleteBookModalSpn").click(function(){
     $("#deleteBookModal").hide();
-});
+  });
 // END OF DELETE
-
 
 // Search function
 
@@ -509,6 +528,64 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch(error => console.error('Error fetching genres:', error));
 });
+
+//add author dropdown to EDIT a book form
+document.addEventListener('DOMContentLoaded', function () {
+    // Fetch authors from your API endpoint
+    fetch('https://localhost:44320/get-all-authors')
+        .then(response => response.json())
+        .then(authors => {
+            const authorsDropdown = document.getElementById('editAuthorDropdown');
+
+            // Create checkboxes for each author
+            authors.forEach(author => {
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'authors';
+                checkbox.value = author.authorId;
+                const label = document.createElement('label');
+                label.appendChild(document.createTextNode(author.fullName)); // Use the author's name or another property
+
+                const authorDiv = document.createElement('div');
+                authorDiv.appendChild(checkbox);
+                authorDiv.appendChild(label);
+
+                authorsDropdown.appendChild(authorDiv);
+            });
+
+            // Populate the edit form after adding the checkboxes
+            if (book) {
+                populateEditForm(book);
+            }
+        })
+        .catch(error => console.error('Error fetching authors:', error));
+});
+
+function toggleEditAuthorsDropdown() {
+    const authorsDropdown = document.getElementById('editAuthorDropdown');
+    authorsDropdown.style.display = (authorsDropdown.style.display === 'none' || authorsDropdown.style.display === '') ? 'block' : 'none';
+}
+
+//add EDIT genre dropdown
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Fetch genres from your API endpoint
+    fetch('https://localhost:44320/api/Genres/get-all-genres')
+        .then(response => response.json())
+        .then(genres => {
+            const genreDropdown = document.getElementById('editGenre');
+
+            // Dynamically populate the dropdown options
+            genres.forEach(genre => {
+                const option = document.createElement('option');
+                option.value = genre.genreId;  // Set the value
+                option.text = genre.genreTitle;   // Set the displayed text
+                genreDropdown.add(option);
+            });
+        })
+        .catch(error => console.error('Error fetching genres:', error));
+});
+
 
 // Event listener for the form submission
 document.getElementById('bookForm').addEventListener('submit', function (event) {
