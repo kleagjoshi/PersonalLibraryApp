@@ -31,38 +31,38 @@ function readFunction2(event) {
     });
 }
 
-function editFunction(event){
+function editFunction(event) {
     $("#editBookModal").show();
 
-$("#closeEditBookModalSpn").click(function(){
-    $("#editBookModal").hide();
-});
+    $("#closeEditBookModalSpn").click(function () {
+        $("#editBookModal").hide();
+    });
 }
 
-function deleteFunction(event){
+function deleteFunction(event) {
     $("#deleteBookModal").show();
 
-$("#closeDeleteBookModalSpn").click(function(){
-    $("#deleteBookModal").hide();
-});
+    $("#closeDeleteBookModalSpn").click(function () {
+        $("#deleteBookModal").hide();
+    });
 }
 
 
 // // //Add event to Add Book button
- document.addEventListener('DOMContentLoaded',(event)=>{
+document.addEventListener('DOMContentLoaded', (event) => {
 
-     const addButton = document.getElementById("addBookBtn");
-    addButton.addEventListener('click',readFunction1)
+    const addButton = document.getElementById("addBookBtn");
+    addButton.addEventListener('click', readFunction1)
 
 })
 
- //Add event to Add Author button
-document.addEventListener('DOMContentLoaded',(event)=>{
+//Add event to Add Author button
+document.addEventListener('DOMContentLoaded', (event) => {
 
     const addButton = document.getElementById("addAuthorBtn");
-   addButton.addEventListener('click',readFunction2)
+    addButton.addEventListener('click', readFunction2)
 
- })
+})
 
 
 
@@ -289,16 +289,16 @@ $(document).ready(function () {
         // Get values from form fields
         var id = $("#bookId").val();
         var title = $("#bookTitle").val();
-        
+
         var authors = [];
         $("#authorsDropdown input:checked").each(function () {
             authors.push($(this).val());
         });
-    
+
         var description = $("#description").val();
         var genre = $("#genre").val(); // Get the selected genre
         var imageurl = $("#image").val();
-    
+
         // Call the handleEditSubmit function with the form values
         handleEditSubmit(id, title, authors, description, genre, imageurl);
         $("#editBookModal").hide();
@@ -307,14 +307,14 @@ $(document).ready(function () {
 })
 
 //add functionality to edit button
-$(gridBody).on('click', "#editBtn", function(){
+$(gridBody).on('click', "#editBtn", function () {
     const bookId = $(this).data('edit-id');
     const book = books.find(n => n.id == bookId);
-    
+
     populateEditForm(book);
     $("#editBookModal").show();
-    
-    function populateEditForm(book){
+
+    function populateEditForm(book) {
         $("#editBookTitle").val(book.title);
         $("#editBookAuthor").val(book.authors);
         $("#editBookDescription").val(book.description);
@@ -323,7 +323,7 @@ $(gridBody).on('click', "#editBtn", function(){
     }
 })
 
-$("#closeEditModalSpn").click(function(){
+$("#closeEditModalSpn").click(function () {
     $("#editBookModal").hide();
 });
 
@@ -331,48 +331,47 @@ $("#closeEditModalSpn").click(function(){
 
 // START OF DELETE
 //add functionality to delete button
-$(gridBody).on('click', "#deleteBtn", function(){
-    
-        bookId = $(this).data('delete-id');
-        $("#deleteBookModal").show();
-      
+$(gridBody).on('click', "#deleteBtn", function () {
+
+    bookId = $(this).data('delete-id');
+    $("#deleteBookModal").show();
+
 });
 
 // Add a click event listener to the confirm button
 $("#confirmDeleteBtn").click(function () {
     // Call the API to delete the book, like handlesubmit
     const settings = {
-      async: true,
-      crossDomain: true,
-      url: `https://localhost:44320/api/Books/delete-a-book-by-id/${bookId}`,
-      method: 'DELETE',
-      headers: {
-        'content-type': 'application/json'
-      }
+        async: true,
+        crossDomain: true,
+        url: `https://localhost:44320/api/Books/delete-a-book-by-id/${bookId}`,
+        method: 'DELETE',
+        headers: {
+            'content-type': 'application/json'
+        }
     };
 
     $.ajax(settings).done(function (response) {
-     if(response)
-     {
-      alert("Book is deleted");
-     }
-     else{
-      alert("This book can not be deleted");
-     }
-      // Hide the confirmation modal
-      $("#deleteBookModal").hide();
+        if (response) {
+            alert("Book is deleted");
+        }
+        else {
+            alert("This book can not be deleted");
+        }
+        // Hide the confirmation modal
+        $("#deleteBookModal").hide();
     });
-  });
-  
-  // Add a click event listener to the cancel button
-  $("#cancelDeleteBtn").click(function () {
+});
+
+// Add a click event listener to the cancel button
+$("#cancelDeleteBtn").click(function () {
     // Close the confirmation modal
     $("#deleteBookModal").hide();
-  });
+});
 
-  $("#closeDeleteBookModalSpn").click(function(){
+$("#closeDeleteBookModalSpn").click(function () {
     $("#deleteBookModal").hide();
-  });
+});
 // END OF DELETE
 
 
@@ -394,24 +393,47 @@ $("#confirmDeleteBtn").click(function () {
 //         alert("Error 404!!!\nHahaha Just kidding :) \nWe don't have this book.");
 //     }
 // }
+// function searchBooks() {
+//     var title = $('#searchTitle').val();
+
+//     $.ajax({
+//         url: `https://localhost:44320/api/Books/search-book-by-title/${title}`,
+//         type: 'POST',
+//         success: function (title) {
+//             displaySearchResults(title);
+//             alert("YAY!! \n The book you are searching is in our library.");
+//             //populateGrid(); //call function to display book
+//         },
+//         error: function (error) {
+//             alert("Error 404!!!\nWe don't have this book :(.");
+//             console.error('Error searching books:', error.responseText);
+//         }
+//     });
+// }
 function searchBooks() {
-    var title = $('#searchTitle').val();
+    var title = $('#search').val();
 
     $.ajax({
-        url: 'https://localhost:44320/api/Books/search-book-by-title/${title}',
+        url: 'https://localhost:44320/api/Books/search-book-by-title/' + title,
         type: 'POST',
-        success: function (data) {
-            displaySearchResults(data);
-            alert("YAY!! \n The book ' " + book.title + " ' you are searching is in our library.");
-            populateGrid(); //call function to display book
-        },
-        error: function (error) {
-            alert("Error 404!!!\nWe don't have this book :(.");
-            console.error('Error searching books:', error.responseText);
-        }
+        success: handleSearchSuccess,
+        error: handleSearchError
     });
 }
 
+function handleSearchSuccess() {
+
+    displaySearchResults(data);
+    var successMessage = (data && data.title) ? `YAY!! \nThe book '${data.title}' you are searching is in our library.` : "YAY!! \nThe book you are searching for is in our library.";
+    alert(successMessage || "YAY!! \nThe book you are searching for is in our library.");
+
+    //populateGrid(); //call function to display book
+}
+
+function handleSearchError(error) {
+    alert("Error 404!!!\nWe don't have this book :(");
+    console.error('Error searching books:', error.responseText);
+}
 
 document.addEventListener('DOMContentLoaded', (event) => {
 
@@ -419,7 +441,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     searchButton.addEventListener('click', searchBooks);
 
 
-})
+});
 
 //Image preview in the form
 
