@@ -48,32 +48,6 @@ $("#closeDeleteBookModalSpn").click(function(){
 }
 
 
-//hiding add book and add author buttons for
-// const isAdmin = decodedToken.getRole('isAdmin') === 'true';
-// if (isAdmin) {
-//     //Add event to Add Book button
-//     document.addEventListener('DOMContentLoaded', (event) => {
-
-//         const addButton = document.getElementById("addBookBtn");
-//         addButton.addEventListener('click', readFunction1)
-
-//     })
-
-//     //Add event to Add Author button
-//     document.addEventListener('DOMContentLoaded', (event) => {
-
-//         const addButton = document.getElementById("addAuthorBtn");
-//         addButton.addEventListener('click', readFunction2)
-
-//     })
-// } else {
-//     const addBookBtn = document.getElementById("addBookBtn");
-//     const addAuthorBtn = document.getElementById("addAuthorBtn");
-//     // Hide the buttons
-//     addBookBtn.style.display = 'none';
-//     addAuthorBtn.style.display = 'none';
-// }
-
 // // //Add event to Add Book button
  document.addEventListener('DOMContentLoaded',(event)=>{
 
@@ -120,6 +94,28 @@ document.getElementById("myGrid").innerHTML = " ";
 
 function populateGrid() {
     $.each(books, function (index, book) {
+
+        //decode the token
+    const token = localStorage.getItem('token');
+
+    if (token) {
+        const decodedToken = parseJwt(token);
+        var _userRole = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+    }
+    // Function to decode a JWT token
+    function parseJwt(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+
+        return JSON.parse(jsonPayload);
+    }
+
+    const isAdmin = _userRole === 'Admin';
+    const isUser = _userRole === 'User';
+
         const item = `<div class="grid-item">
                     <div class="img-container">
                         <img class="image" src="${book.coverUrl}">
@@ -129,9 +125,10 @@ function populateGrid() {
                     </div>
                     <div class="attr" id="">${book.title} <br> ${book.authorNames.join(', ')} <br>${book.genreTitle} </div>
                     <div>
-                         <button class ="glow-on-hover" type="button" name="readBtn" id="readBtn" data-read-id="${book.bookId}">Read Me</button>
-                         <button class ="glow-on-hover" type="button" name="editBtn" id="editBtn" data-edit-id="${book.bookId}">Edit</button> 
-                         <button class ="glow-on-hover" type="button" name="deleteBtn" id="deleteBtn" data-delete-id="${book.bookId}">Delete</button>    
+                    
+                    ${isUser ? `<button class ="glow-on-hover" type="button" name="readBtn" id="readBtn" data-read-id="${book.bookId}">Read Me</button>` : ''}
+                    ${isAdmin ? `<button class ="glow-on-hover" type="button" name="editBtn" id="editBtn" data-edit-id="${book.bookId}">Edit</button>` : ''}
+                    ${isAdmin ? `<button class ="glow-on-hover" type="button" name="deleteBtn" id="deleteBtn" data-delete-id="${book.bookId}">Delete</button>` : ''}    
                     </div>
                 </div>`;
 
@@ -143,7 +140,6 @@ function populateGrid() {
 
 
 //this function makes the form function as it should
-
 function handleSubmit(_title, _authors, _description, _genre, _image) {
     // Convert author IDs to integers
     const authorIds = _authors.map(authorId => parseInt(authorId, 10));
@@ -161,7 +157,7 @@ function handleSubmit(_title, _authors, _description, _genre, _image) {
 
     //Request orders data from the api endpoint
     const settings = {
-        async: true,
+        async: false,
         crossDomain: true,
         url: 'https://localhost:44320/api/Books/add-book-with-authors',
         method: 'POST',
@@ -171,9 +167,10 @@ function handleSubmit(_title, _authors, _description, _genre, _image) {
         data: JSON.stringify(newBook)
     };
     console.log(newBook);
-
+debugger
     $.ajax(settings).done(function (response) {
-        alert('Book added to json file');
+        console.log(response);
+        alert('Book added to json file');   
     });
 
 
@@ -197,7 +194,7 @@ $(document).ready(function () {
         // Call the handleSubmit function with the form values
         handleSubmit(title, authors, description, genre, imageurl);
         $("#addBookModal").hide();
-        location.reload();
+        //location.reload();
 
     });
 })
@@ -217,16 +214,7 @@ $(gridBody).on('click', "#readBtn", function () {
         const decodedToken = parseJwt(token);
         var _userId = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
     }
-    // Function to decode a JWT token
-    function parseJwt(token) {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-
-        return JSON.parse(jsonPayload);
-    }
+    
 
     //add this record (user-book) to db
 
@@ -519,7 +507,7 @@ function handleAuthorSubmit(_fullname) {
 
     //Request orders data from the api endpoint
     const settings = {
-        async: true,
+        async: false,
         crossDomain: true,
         url: 'https://localhost:44320/add-author',
         method: 'POST',
@@ -552,4 +540,53 @@ $(document).ready(function () {
     });
 })
 
+//update nav
 
+function updateNavigation(userRole) {
+    const adminProfileLink = document.getElementById('adminProfileLink');
+    const userProfileLink = document.getElementById('userProfileLink');
+    const homeLink = document.getElementById('homeLink');
+    const addBookBtn = document.getElementById('addBookBtn');
+    const addAuthorBtn = document.getElementById('addAuthorBtn');
+
+        if (userRole === 'Admin') {
+            // If the user is an admin, show the admin link
+            adminProfileLink.parentElement.style.display = 'block';
+            userProfileLink.style.display = 'none';
+            homeLink.style.display = 'none';
+            
+        } else {
+            // If the user is not an admin, hide the admin link
+            adminProfileLink.style.display = 'none';
+            userProfileLink.parentElement.style.display = 'block';
+            homeLink.style.display = 'none';
+            addBookBtn.style.display = 'none';
+            addAuthorBtn.style.display = 'none';
+        }
+    
+   
+};
+
+//get token
+
+const token = localStorage.getItem('token');
+
+    if (token) {
+        const decodedToken = parseJwt(token);
+        var _userRole = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
+        console.log(_userRole);
+    }
+    // Function to decode a JWT token
+    
+
+updateNavigation(_userRole);
+
+function parseJwt(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+}
