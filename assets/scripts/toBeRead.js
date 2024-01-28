@@ -25,7 +25,6 @@ function parseJwt(token) {
 }
 
 
-
 var books = [];
 
 console.log('Books (before request) = ', books);
@@ -157,8 +156,6 @@ function updateNavigation(userRole) {
 };
 
 //get role from token
-
-
 
     if (token) {
         const decodedToken = parseJwt(token);

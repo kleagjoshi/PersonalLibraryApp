@@ -143,10 +143,17 @@ function populateGrid() {
 
 
 //this function makes the form function as it should
-function handleSubmit(_title, _authors, _description, _genre, _image) {
+async function handleSubmit(_title, _authors, _description, _genre, _image) {
     // Convert author IDs to integers
     const authorIds = _authors.map(authorId => parseInt(authorId, 10));
 
+    // Check if the author-title combination already exists
+    const authorTitleExists = await checkAuthorTitleCombination(_authors[0], _title);
+
+    if (authorTitleExists) {
+        alert('This book already exists in the library with the selected author.');
+        return;
+    }
 
     // Create Object
     var newBook = {
@@ -175,9 +182,27 @@ debugger
         console.log(response);
         alert('Book added to json file');   
     });
-
-
 }
+async function checkAuthorTitleCombination(authorId, title) {
+    const checkSettings = {
+      async: true,
+      crossDomain: true,
+      url: `https://localhost:44320/api/Books/check-author-title?authorId=${authorId}&title=${title}`,
+      method: 'GET',
+      headers: {
+        'content-type': 'application/json'
+      },
+    };
+  
+    return new Promise((resolve, reject) => {
+      $.ajax(checkSettings).done(function (response) {
+        resolve(response.exists);
+      }).fail(function (jqXHR, textStatus, errorThrown) {
+        reject(new Error(textStatus + ': ' + errorThrown));
+      });
+    });
+  }
+  
 
 $(document).ready(function () {
     $("#submitBtn").click(function () {
@@ -203,50 +228,76 @@ $(document).ready(function () {
 })
 
 
+
 //add functionality to read me button
 const gridBody = document.getElementById("myGrid");
 
 $(gridBody).on('click', "#readBtn", function () {
     const _bookId = $(this).data('read-id');
 
-
     //decode the token
     const token = localStorage.getItem('token');
+
 
     if (token) {
         const decodedToken = parseJwt(token);
         var _userId = decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'];
+
+        // Check if the user-book combination already exists
+        const checkSettings = {
+            async: true,
+            crossDomain: true,
+            url: `https://localhost:44320/api/UserBooks/check-combination?bookId=${_bookId}&userId=${_userId}`,
+            method: 'GET',
+            headers: {
+                'content-type': 'application/json'
+            },
+        };
+
+        $.ajax(checkSettings).done(function (response) {
+            if (response.exists) {
+                alert('You have already added this book to your wishing list.');
+                return;
+            }
+
+            // If the combination doesn't exist, add the book
+            var newUserBook = {
+                bookId: _bookId,
+                userId: _userId
+            };
+
+            const addSettings = {
+                async: true,
+                crossDomain: true,
+                url: 'https://localhost:44320/api/UserBooks/add-book-user',
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                data: JSON.stringify(newUserBook),
+            };
+
+
+            $.ajax(addSettings).done(function (response) {
+                alert('UserBook added to json file');
+            });
+
+            $("#readModal").show();
+        });
     }
+    function parseJwt(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
     
-
-    //add this record (user-book) to db
-
-    var newUserBook = {
-        bookId: _bookId,
-        userId: _userId
-    };
-
-
-    // api endpoint
-    const settings = {
-        async: true,
-        crossDomain: true,
-        url: 'https://localhost:44320/api/UserBooks/add-book-user?bookId=' + newUserBook.bookId + '&userId=' + newUserBook.userId,
-        method: 'POST',
-        headers: {
-            'content-type': 'application/json'
-        },
-
-    };
-
-    $.ajax(settings).done(function (response) {
-        alert('UserBook added to json file');
-    });
+        return JSON.parse(jsonPayload);
+    }
 
     //$("#book-name").text(Book.title);
-    $("#readModal").show();
+    
 });
-
 
 $("#closeReadSpn").click(function () {
     $("#readModal").hide();
@@ -671,17 +722,20 @@ const token = localStorage.getItem('token');
         var _userRole = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
         console.log(_userRole);
     }
+
+    updateNavigation(_userRole);
+
     // Function to decode a JWT token
+    function parseJwt(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+    
+        return JSON.parse(jsonPayload);
+    }
     
 
-updateNavigation(_userRole);
 
-function parseJwt(token) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
 
-    return JSON.parse(jsonPayload);
-}
