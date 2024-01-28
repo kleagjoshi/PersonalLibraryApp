@@ -402,7 +402,38 @@ $("#confirmDeleteBtn").click(function () {
   });
 // END OF DELETE
 
+// Search function
 
+function searchBooks() {
+    var title = $('#searchTitle').val();
+
+    $.ajax({
+        url: `https://localhost:44320/api/Books/search-book-by-title/${title}`,
+        type: 'GET', // Change to GET
+        success: function (books) {
+            //displaySearchResults(books);
+            if (books.length > 0) {
+                var successMessage = `YAY!! \nThe book '${books[0].title}' you are searching is in our library.`;
+                alert(successMessage);
+            } else {
+                alert("YAY!! \nThe book you are searching for is not in our library.");
+            }
+        },
+        error: function (error) {
+            alert("Error 404!!!\nWe don't have this book :(");
+            console.error('Error searching books:', error.responseText);
+        }
+    });
+}
+
+ document.addEventListener('DOMContentLoaded', (event) => {
+    
+     const searchButton = document.getElementById("searchBtn");
+    // event.preventDefault();
+     searchButton.addEventListener('click', searchBooks);
+
+
+ });
 
 //  function displaySearchResults(books) {
 //     // Clear the existing results
