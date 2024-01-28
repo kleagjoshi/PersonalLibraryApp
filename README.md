@@ -1,5 +1,5 @@
-# Project Name
-PersonalLibraryApp
+# PersonalLibraryApp
+
 This is the personal library app- Uni Project
 
 Chapter, personal library app which allows you to keep track of your reading activity.
