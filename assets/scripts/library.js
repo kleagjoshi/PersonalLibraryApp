@@ -256,7 +256,7 @@ $(gridBody).on('click', "#readBtn", function () {
 
         $.ajax(checkSettings).done(function (response) {
             if (response.exists) {
-                alert('You have already added this book to your wishing list.');
+                alert('You have already added this book to your personal library.');
                 return;
             }
 
@@ -269,17 +269,16 @@ $(gridBody).on('click', "#readBtn", function () {
             const addSettings = {
                 async: true,
                 crossDomain: true,
-                url: 'https://localhost:44320/api/UserBooks/add-book-user',
+                url: 'https://localhost:44320/api/UserBooks/add-book-user?bookId=' + newUserBook.bookId + '&userId=' + newUserBook.userId,
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json'
                 },
-                data: JSON.stringify(newUserBook),
             };
 
 
             $.ajax(addSettings).done(function (response) {
-                alert('UserBook added to json file');
+                alert('Book added to wishing list.');
             });
 
             $("#readModal").show();
@@ -295,7 +294,6 @@ $(gridBody).on('click', "#readBtn", function () {
         return JSON.parse(jsonPayload);
     }
 
-    //$("#book-name").text(Book.title);
     
 });
 
