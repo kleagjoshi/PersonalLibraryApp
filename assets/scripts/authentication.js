@@ -102,7 +102,7 @@ $(document).ready(function() {
             
             //Save token to localstorage
             localStorage.setItem('token', response.token);
-
+            window.location.href = 'myprofile.html';
     //         //decode the token to get the role
     
             

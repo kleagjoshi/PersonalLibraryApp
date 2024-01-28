@@ -1,3 +1,4 @@
+let book;
 class Book {
     constructor(_id, _title, _authors, _description, _coverUrl, _genre) {
         this.id = _id;
@@ -82,10 +83,10 @@ const settings = {
 };
 
 $.ajax(settings).done(function (response) {
-    console.log(response);
 
     books = response;
 
+    
     console.log('Books (after request response) = ', books);
 
     populateGrid();
@@ -127,8 +128,10 @@ function populateGrid() {
                     <div>
                     
                     ${isUser ? `<button class ="glow-on-hover" type="button" name="readBtn" id="readBtn" data-read-id="${book.bookId}">Read Me</button>` : ''}
-                    ${isAdmin ? `<button class ="glow-on-hover" type="button" name="editBtn" id="editBtn" data-edit-id="${book.bookId}">Edit</button>` : ''}
-                    ${isAdmin ? `<button class ="glow-on-hover" type="button" name="deleteBtn" id="deleteBtn" data-delete-id="${book.bookId}">Delete</button>` : ''}    
+                    <div class="button-container" id="editDelete">
+                        ${isAdmin ? `<button class ="glow-on-hover" type="button" name="editBtn" id="editBtn" data-edit-id="${book.bookId}">Edit</button>` : ''}
+                        ${isAdmin ? `<button class ="glow-on-hover" type="button" name="deleteBtn" id="deleteBtn" data-delete-id="${book.bookId}">Delete</button>` : ''}    
+                    </div>
                     </div>
                 </div>`;
 
@@ -265,15 +268,18 @@ $(gridBody).on('click', "#editBtn", function(){
         $("#editDescription").val(book.description);
         $("#editGenre option[value='" + book.genreId + "']").prop("selected", true); // Set the selected genre
         $("#editBookCoverUrl").val(book.coverUrl);
+        $("#editBookId").val(book.bookId); // Store the bookId in a hidden input field, to access it from the submit edit button
 
         setTimeout(() => {
             // Clear the previous selection
             $("#editAuthorDropdown input[type='checkbox']").prop("checked", false);
     
             // Mark the corresponding checkboxes as checked
-            book.authors.forEach(authorId => {
-                $("#editAuthorDropdown input[value='" + authorId + "']").prop("checked", true);
-            });
+            if (book && book.authors) {
+                book.authors.forEach(authorId => {
+                  $("#editAuthorDropdown input[value='" + authorId + "']").prop("checked", true);
+                });
+              }
         }, 0);
     
         
@@ -294,7 +300,7 @@ function handleEditSubmit(_id, _title, _authors, _description, _genre, _image) {
         title: _title,
         authorIds: authorIds, // Update to match the server's expected format
         description: _description,
-        genreId: parseInt(_genre, 10), // Convert genre ID to integer
+        genreId: parseInt(_genre, 10), //Convert genre ID to integer
         coverUrl: _image
     };
 
@@ -302,7 +308,7 @@ function handleEditSubmit(_id, _title, _authors, _description, _genre, _image) {
     var settings = {
         async: true,
         crossDomain: true,
-        url: `https://localhost:44320/api/Books/update-book/${_id}`,
+        url: `https://localhost:44320/api/Books/update-book-by-id/${_id}`,
         method: 'PUT',
         headers: {
             'content-type': 'application/json'
@@ -315,7 +321,7 @@ function handleEditSubmit(_id, _title, _authors, _description, _genre, _image) {
         console.log("response",response);
         if(response)
         {
-            alert('User updated successfully');
+            alert('Book updated successfully');
         }
         else{
             alert("Update failed");
@@ -324,27 +330,29 @@ function handleEditSubmit(_id, _title, _authors, _description, _genre, _image) {
 }
 
 $(document).ready(function () {
-    $("#submitEditBtn").click(function () {
-        var id = $(this).data('-id');
-        // Get values from form fields
-        var title = $("#editBookTitle").val();
-        
-        var authors = [];
-        $("#editAuthorDropdown input:checked").each(function () {
-            authors.push($(this).val());
-        });
-    
-        var description = $("#editDescription").val();
-        var genre = $("#editGenre").val(); // Get the selected genre
-        var imageurl = $("#editBookCoverUrl").val();
-    
-        // Call the handleEditSubmit function with the form values
-        handleEditSubmit(id, title, authors, description, genre, imageurl);
+    $("#submitEditBtn").click(function (e) {
+      e.preventDefault(); // Prevent the default form submission behavior
+  
+      var id = $("#editBookId").val(); // Get the bookId from the hidden input field
+      // Get values from form fields
+      var title = $("#editBookTitle").val();
+  
+      var authors = [];
+      $("#editAuthorDropdown input:checked").each(function () {
+        authors.push($(this).val());
+      });
+  
+      var description = $("#editDescription").val();
+      var genre = $("#editGenre").val(); // Get the selected genre
+      var imageurl = $("#editBookCoverUrl").val();
+  
+      // Call the handleEditSubmit function with the form values
+      handleEditSubmit(id, title, authors, description, genre, imageurl, function () {
         $("#editBookModal").hide();
         location.reload();
+      });
     });
-})
-
+  })
 
 // END OF EDIT
 
@@ -361,7 +369,7 @@ $(gridBody).on('click', "#deleteBtn", function(){
 $("#confirmDeleteBtn").click(function () {
     // Call the API to delete the book, like handlesubmit
     const settings = {
-      async: true,
+      async: false,
       crossDomain: true,
       url: `https://localhost:44320/api/Books/delete-a-book-by-id/${bookId}`,
       method: 'DELETE',
@@ -394,73 +402,27 @@ $("#confirmDeleteBtn").click(function () {
   });
 // END OF DELETE
 
-// Search function
-
-// function search(){
-
-//     const test = document.getElementById("inputId").value;
-//     const book1=test.toLowerCase();
-
-//     var allBooks = JSON.parse(localStorage.getItem('books')) || [];
 
 
-//     const book = allBooks.find(n=> n.title.toLowerCase()==book1);
-//     if(book){
-//         alert("YAY!! \n The book ' "+book.title+" ' you are searching is in our library.");
-//     }
-//     else{
-//         alert("Error 404!!!\nHahaha Just kidding :) \nWe don't have this book.");
-//     }
-// }
-// function searchBooks() {
-//     var title = $('#searchTitle').val();
+//  function displaySearchResults(books) {
+//     // Clear the existing results
+//     $('#searchResults').empty();
 
-//     $.ajax({
-//         url: `https://localhost:44320/api/Books/search-book-by-title/${title}`,
-//         type: 'POST',
-//         success: function (title) {
-//             displaySearchResults(title);
-//             alert("YAY!! \n The book you are searching is in our library.");
-//             //populateGrid(); //call function to display book
-//         },
-//         error: function (error) {
-//             alert("Error 404!!!\nWe don't have this book :(.");
-//             console.error('Error searching books:', error.responseText);
-//         }
+//     // Iterate through the books and display each one
+//     books.forEach(book => {
+//         $('#searchResults').append(`
+//             <div class="search-result">
+//                 <h3>${book.title}</h3>
+//                 <p>${book.authorIds.map(authorId => _authors.find(author => author.id === authorId).name).join(', ')}</p>
+//                 <p>${book.description}</p>
+//                 <p>${book.genre.name}</p>
+//                 <img src="${book.coverUrl}" alt="${book.title}" width="150">
+//             </div>
+//         `);
 //     });
 // }
-function searchBooks() {
-    var title = $('#search').val();
-
-    $.ajax({
-        url: 'https://localhost:44320/api/Books/search-book-by-title/' + title,
-        type: 'POST',
-        success: handleSearchSuccess,
-        error: handleSearchError
-    });
-}
-
-function handleSearchSuccess() {
-
-    displaySearchResults(data);
-    var successMessage = (data && data.title) ? `YAY!! \nThe book '${data.title}' you are searching is in our library.` : "YAY!! \nThe book you are searching for is in our library.";
-    alert(successMessage || "YAY!! \nThe book you are searching for is in our library.");
-
-    //populateGrid(); //call function to display book
-}
-
-function handleSearchError(error) {
-    alert("Error 404!!!\nWe don't have this book :(");
-    console.error('Error searching books:', error.responseText);
-}
-
-document.addEventListener('DOMContentLoaded', (event) => {
-
-    const searchButton = document.getElementById("searchBtn");
-    searchButton.addEventListener('click', searchBooks);
 
 
-});
 
 //Image preview in the form
 
@@ -571,20 +533,23 @@ function toggleEditAuthorsDropdown() {
 document.addEventListener('DOMContentLoaded', function () {
     // Fetch genres from your API endpoint
     fetch('https://localhost:44320/api/Genres/get-all-genres')
-        .then(response => response.json())
-        .then(genres => {
-            const genreDropdown = document.getElementById('editGenre');
-
-            // Dynamically populate the dropdown options
-            genres.forEach(genre => {
-                const option = document.createElement('option');
-                option.value = genre.genreId;  // Set the value
-                option.text = genre.genreTitle;   // Set the displayed text
-                genreDropdown.add(option);
-            });
-        })
-        .catch(error => console.error('Error fetching genres:', error));
-});
+      .then(response => response.json())
+      .then(genres => {
+        console.log("Genres:", genres);
+        if (genres) {
+          const genreDropdown = document.getElementById('editGenre');
+  
+          // Dynamically populate the dropdown options
+          genres.forEach(genre => {
+            const option = document.createElement('option');
+            option.value = genre.genreId;  // Set the value
+            option.text = genre.genreTitle;   // Set the displayed text
+            genreDropdown.add(option);
+          });
+        }
+      })
+      .catch(error => console.error('Error fetching genres:', error));
+  });
 
 
 // Event listener for the form submission

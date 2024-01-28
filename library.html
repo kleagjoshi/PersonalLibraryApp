@@ -28,8 +28,8 @@
         <ul>
             <li>
                 <form class="searchForm">
-                    <input type="text" id="search" placeholder="Search your book" name="search" autocomplete="off"> 
-                    <button id="searchBtn" type="submit"><i class="fa fa-search"></i></button>
+                    <input type="text" id="searchTitle" placeholder="Search your book" name="search" autocomplete="off"> 
+                    <button id="searchBtn" type="button"><i class="fa fa-search"></i></button>
                 </form>     
             </li>
             <li>
@@ -41,6 +41,7 @@
         </ul>
     </div>
     
+    <!-- <div id="searchResults"></div> -->
 
    <div class="grid-container" id="myGrid">
    </div>
@@ -174,6 +175,7 @@
                 <input type="link" id="editBookCoverUrl" name="editBookCoverUrl" value="" oninput="previewImage(this)"></textarea>
                 <img id="imagePreview" src="" alt="Image Preview" style="max-width: 100%; max-height: 100px; margin-top: 10px; display: none;">
             </div>
+            <input type="hidden" id="editBookId" name="editBookId">
             <div>
                 <button id="submitEditBtn">Edit</button>
                 <button id="cancelEditBtn">Cancel</button>

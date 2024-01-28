@@ -136,7 +136,7 @@ ul li .searchForm{
 
   /* Button adjust and style in the div */
 
-  .grid-item button{
+  #readBtn{
     background-color: #2C325A;
     color: white;
     cursor: pointer;
@@ -334,3 +334,10 @@ form#bookForm div{
   padding: 5px;
 }
 
+.button-container{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  color: white;
+  cursor: pointer;
+}
