@@ -60,15 +60,15 @@ function populateGrid(){
                         </div>
                     </div>
                     <div class="attr" id="">${book.title} <br> ${book.authorNames.join(', ')} <br>${book.genreTitle} </div>
-                    <div
-                        class="RadialProgress"
-                        role="progressbar"
-                        aria-valuenow="0"
-                        aria-valuemin="0"
-                        aria-valuemax="100"
-                      ></div>
+                    <!-- <div
+                         class="RadialProgress"
+                         role="progressbar"
+                         aria-valuenow="0"
+                         aria-valuemin="0"
+                         aria-valuemax="100"
+                       > </div> -->
                         <input class=sliding type="range" value="0" min="0" max="100" />
-                </div>
+                
                 </div>`;
         
                 document.getElementById("myGrid").innerHTML += item;
